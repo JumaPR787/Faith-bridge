@@ -3,6 +3,8 @@ import Fastify, { type FastifyInstance } from "fastify";
 import { AuthError } from "./auth.js";
 import { handleRevenueCatWebhook, type RcWebhookBody } from "./billing/webhook.js";
 import type { AppContext } from "./context.js";
+import { registerChurchRoutes } from "./church/routes.js";
+import { handleListenSocket } from "./church/listen.js";
 import { handleLiveSocket } from "./live/handler.js";
 import { registerAccountRoutes } from "./routes/account.js";
 import { registerGlossaryRoutes } from "./routes/glossary.js";
@@ -27,6 +29,7 @@ export async function buildApp(ctx: AppContext, app: FastifyInstance): Promise<F
   registerTranslateRoutes(app, ctx);
   registerGlossaryRoutes(app, ctx);
   registerAccountRoutes(app, ctx);
+  registerChurchRoutes(app, ctx);
 
   app.post("/webhooks/revenuecat", async (req, reply) => {
     const out = await handleRevenueCatWebhook(ctx.db, ctx.revenuecat, ctx.cfg, req.log, req.headers.authorization, req.body as RcWebhookBody);
@@ -34,6 +37,7 @@ export async function buildApp(ctx: AppContext, app: FastifyInstance): Promise<F
   });
 
   app.get("/v1/live", { websocket: true }, (socket) => handleLiveSocket(ctx, socket));
+  app.get("/v1/church/listen", { websocket: true }, (socket) => handleListenSocket(ctx, socket));
   return app;
 }
 

@@ -20,6 +20,8 @@ class AppConfig {
     return base.replace(scheme: base.scheme == 'https' ? 'wss' : 'ws', path: '/v1/live');
   }
 
+  static Uri get listenSocketUri => liveSocketUri.replace(path: '/v1/church/listen');
+
   /// Faltan valores obligatorios para un entorno real.
   static List<String> missing() => [
         if (supabaseUrl.isEmpty) 'SUPABASE_URL',

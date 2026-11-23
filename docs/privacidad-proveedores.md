@@ -60,6 +60,14 @@
 
 ## Modo iglesia (fase 2)
 
+**Datos de los asistentes:**
+- No necesitan cuenta.
+- Se guarda solo un **id aleatorio por conexión**, la hora de entrada y salida y los bytes enviados (`church_session_listeners`), para medir la asistencia y el tráfico.
+- **No se guardan la IP ni el dispositivo.** El límite de intentos por IP vive solo en memoria y se descarta.
+- La **cámara** se usa solo para leer el QR en el propio teléfono; no se envía ninguna imagen.
+
+**Organizador:**
+
 - El organizador debe declarar que tiene **autorización para transmitir y procesar el audio** (`organizations.audio_authorization_attested_at`).
 - Las leyes sobre grabación y procesamiento de voz cambian según el estado y el país. Por ejemplo, algunos estados de EE. UU. exigen consentimiento de todas las partes para grabar conversaciones privadas. Un sermón público puede tratarse de otra forma.
 - **Hay que revisar las reglas aplicables con un abogado** y avisar a los asistentes (por ejemplo, con un aviso en el templo o en la pantalla).

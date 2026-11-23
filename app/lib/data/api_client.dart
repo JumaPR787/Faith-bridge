@@ -94,3 +94,25 @@ class ApiClient {
 
   Future<Map<String, dynamic>> deleteAccount() async => (await _req('DELETE', '/v1/account')) as Map<String, dynamic>;
 }
+
+/// Modo iglesia (fase 2).
+extension ChurchApi on ApiClient {
+  Future<Map<String, dynamic>> orgs() async => (await _req('GET', '/v1/orgs')) as Map<String, dynamic>;
+  Future<Map<String, dynamic>> org(String id) async => (await _req('GET', '/v1/orgs/$id')) as Map<String, dynamic>;
+  Future<String> createOrg(String name) async =>
+      ((await _req('POST', '/v1/orgs', body: {'name': name, 'attestAudioAuthorization': true})) as Map<String, dynamic>)['id'] as String;
+  Future<void> addMember(String orgId, String email, String role) => _req('POST', '/v1/orgs/$orgId/members', body: {'email': email, 'role': role});
+  Future<void> removeMember(String orgId, String userId) => _req('DELETE', '/v1/orgs/$orgId/members/$userId');
+  Future<Map<String, dynamic>> createChurchSession(String orgId, {required Lang source, Lang? target, required int maxListeners, required bool save}) async =>
+      (await _req('POST', '/v1/orgs/$orgId/sessions', body: {
+        'sourceLang': source.code,
+        'targetLang': target?.code,
+        'maxListeners': maxListeners,
+        'saveTranscript': save,
+        'attestAudioAuthorization': true,
+      })) as Map<String, dynamic>;
+  Future<void> endChurchSession(String orgId, String sessionId) => _req('POST', '/v1/orgs/$orgId/sessions/$sessionId/end');
+
+  /// Unirse como asistente (no requiere cuenta).
+  Future<Map<String, dynamic>> joinChurch(String code) async => (await _req('POST', '/v1/church/join', body: {'code': code})) as Map<String, dynamic>;
+}

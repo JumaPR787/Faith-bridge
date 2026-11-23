@@ -7,10 +7,13 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 enum ConnState { idle, connecting, open, reconnecting, closed }
 
 class LiveStartParams {
-  LiveStartParams({required this.sourceLang, required this.targetLang, required this.saveTranscript});
+  LiveStartParams({required this.sourceLang, required this.targetLang, required this.saveTranscript, this.churchSessionId});
   final String sourceLang;
   final String? targetLang;
   final bool saveTranscript;
+
+  /// Si existe, el teléfono transmite para una sesión del modo iglesia.
+  final String? churchSessionId;
 }
 
 typedef ChannelFactory = WebSocketChannel Function(Uri uri);
@@ -108,6 +111,7 @@ class LiveConnection {
       'sourceLang': params.sourceLang,
       'targetLang': params.targetLang,
       'saveTranscript': params.saveTranscript,
+      if (params.churchSessionId != null) ...{'mode': 'church', 'churchSessionId': params.churchSessionId},
       if (resume && sessionId != null) 'resumeSessionId': sessionId,
       if (resume) 'lastSeq': lastSeq(),
     }));

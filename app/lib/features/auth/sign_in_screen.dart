@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../core/strings.dart';
 import '../../data/account_controller.dart';
+import '../church/join_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -95,6 +96,12 @@ class _SignInScreenState extends State<SignInScreen> {
             FilledButton(
               onPressed: _busy ? null : (_codeSent ? _verify : _send),
               child: _busy ? const SizedBox(height: 22, width: 22, child: CircularProgressIndicator(strokeWidth: 2)) : Text(_codeSent ? s.t('verify') : s.t('send_code')),
+            ),
+            const SizedBox(height: 24),
+            TextButton.icon(
+              icon: const Icon(Icons.qr_code_scanner),
+              label: Text(s.t('join_without_account')),
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const JoinScreen())),
             ),
           ],
         ),

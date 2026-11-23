@@ -1,6 +1,8 @@
 import type { WebSocket } from "ws";
 import type { AppContext } from "../context.js";
 import { AuthError } from "../auth.js";
+import { memberRole } from "../church/routes.js";
+import { getConfigValue } from "../db.js";
 import { loadGlossary } from "../routes/glossary.js";
 import { ControlMessage, StartMessage, type ErrorCode, type ServerEvent } from "./protocol.js";
 import { LiveSession, type Sink } from "./session.js";
@@ -117,41 +119,69 @@ export function handleLiveSocket(ctx: AppContext, socket: WebSocket): void {
     if (q.trialAlreadyUsed) return fail("trial_already_used", 4402);
     if (q.remainingSeconds <= 0) return fail("quota_exhausted", 4402);
 
-    // Una sola sesión personal activa: la anterior (otro dispositivo) se cierra.
-    const previous = ctx.registry.activeForUser(user.id);
-    if (previous) await previous.end("superseded");
-    await ctx.db.query(
-      "update public.live_sessions set status = 'ended', end_reason = 'superseded', ended_at = now() where user_id = $1 and status = 'active' and mode = 'personal'",
-      [user.id],
-    );
+    // Parámetros efectivos: en modo iglesia vienen de la sesión creada por el organizador.
+    let source = m.sourceLang;
+    let target = m.targetLang;
+    let save = m.saveTranscript;
+    let church: { id: string; orgId: string } | null = null;
+
+    if (m.mode === "church") {
+      if (!(await getConfigValue(ctx.db, "church_mode_enabled", false))) return fail("church_mode_disabled", 4503);
+      const cs = await ctx.db.query<{ org_id: string; status: string; source_lang: "en" | "es"; target_lang: "en" | "es" | null; save_transcript: boolean; expired: boolean }>(
+        `select org_id, status, source_lang, target_lang, save_transcript, join_expires_at <= now() as expired
+         from public.church_sessions where id = $1`,
+        [m.churchSessionId],
+      );
+      const row = cs.rows[0];
+      const role = row ? await memberRole(ctx.db, row.org_id, user.id) : null;
+      if (!row || !role) return fail("session_not_found", 4404);
+      if (role === "member") return fail("not_allowed", 4403);
+      if (row.status === "ended" || row.expired) return fail("session_ended", 4410);
+      if (q.plan !== "church") return fail("no_church_plan", 4402);
+      source = row.source_lang;
+      target = row.target_lang;
+      save = row.save_transcript;
+      church = { id: m.churchSessionId!, orgId: row.org_id };
+      // Una transmisión por sesión de iglesia: la anterior (otro dispositivo) se reemplaza.
+      await ctx.church.broadcastFor(church.id)?.end("superseded");
+    } else {
+      // Una sola sesión personal activa: la anterior (otro dispositivo) se cierra.
+      const previous = ctx.registry.activeForUser(user.id);
+      if (previous) await previous.end("superseded");
+      await ctx.db.query(
+        "update public.live_sessions set status = 'ended', end_reason = 'superseded', ended_at = now() where user_id = $1 and status = 'active' and mode = 'personal'",
+        [user.id],
+      );
+    }
 
     const ins = await ctx.db.query<{ id: string }>(
-      `insert into public.live_sessions (user_id, source_lang, target_lang, save_transcript)
-       values ($1,$2,$3,$4) returning id`,
-      [user.id, m.sourceLang, m.targetLang, m.saveTranscript],
+      `insert into public.live_sessions (user_id, org_id, mode, source_lang, target_lang, save_transcript)
+       values ($1,$2,$3,$4,$5,$6) returning id`,
+      [user.id, church?.orgId ?? null, m.mode, source, target, save],
     );
     const sessionId = ins.rows[0]!.id;
     let transcriptId: string | null = null;
-    if (m.saveTranscript) {
+    if (save) {
       const t = await ctx.db.query<{ id: string }>(
-        `insert into public.transcripts (user_id, session_id, title, source_lang, target_lang, expires_at)
-         select $1, $2, to_char(now() at time zone 'utc', 'YYYY-MM-DD HH24:MI') || ' UTC', $3, $4,
+        `insert into public.transcripts (user_id, org_id, session_id, title, source_lang, target_lang, expires_at)
+         select $1, $5, $2, to_char(now() at time zone 'utc', 'YYYY-MM-DD HH24:MI') || ' UTC', $3, $4,
                 now() + make_interval(days => coalesce((select transcript_retention_days from public.profiles where user_id = $1), 365))
          returning id`,
-        [user.id, sessionId, m.sourceLang, m.targetLang],
+        [user.id, sessionId, source, target, church?.orgId ?? null],
       );
       transcriptId = t.rows[0]!.id;
+      if (church) await ctx.db.query("update public.church_sessions set transcript_id = $2 where id = $1", [church.id, transcriptId]);
     }
     // El glosario sirve para traducir y, en el idioma hablado, como keyterms del STT.
-    const glossary = await loadGlossary(ctx.db, user.id, m.sourceLang, m.targetLang ?? (m.sourceLang === "en" ? "es" : "en"));
+    const glossary = await loadGlossary(ctx.db, user.id, source, target ?? (source === "en" ? "es" : "en"));
 
     const s = new LiveSession(
-      { db: ctx.db, cfg: ctx.cfg, stt: ctx.stt, translator: m.targetLang ? ctx.translator : null, quota: ctx.quota, guard: ctx.guard, log: ctx.log },
+      { db: ctx.db, cfg: ctx.cfg, stt: ctx.stt, translator: target ? ctx.translator : null, quota: ctx.quota, guard: ctx.guard, log: ctx.log },
       {
         sessionId,
         userId: user.id,
-        source: m.sourceLang,
-        target: m.targetLang,
+        source,
+        target,
         transcriptId,
         glossary,
         periodStart: q.periodStart!,
@@ -168,7 +198,8 @@ export function handleLiveSocket(ctx: AppContext, socket: WebSocket): void {
       ctx.log.warn({ err: err instanceof Error ? err.message.slice(0, 120) : "unknown" }, "stt open failed");
       return fail("stt_unavailable", 4503);
     }
-    ctx.registry.add(s);
+    ctx.registry.add(s, { trackUser: !church });
+    if (church) await ctx.church.startBroadcast(church.id, s, church.orgId, q.periodStart!);
     session = s;
     sink = send;
     send({

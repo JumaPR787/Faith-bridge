@@ -6,7 +6,7 @@ App para Android e iPhone que **muestra por escrito lo que se dice en un servici
 
 ## Estado en una línea
 
-El **MVP del modo personal está implementado y probado con proveedores simulados**: 55 pruebas del backend y 13 de la app pasan, y el análisis estático está limpio. **Aún no se ha probado con servicios reales ni en teléfonos**, y nada se ha publicado. Detalle completo: [`docs/estado.md`](docs/estado.md).
+El **MVP del modo personal y el modo iglesia (apagado por ahora) están implementados y probados con proveedores simulados**: 72 pruebas del backend y 17 de la app pasan, y el análisis estático está limpio. **Aún no se ha probado con servicios reales ni en teléfonos**, y nada se ha publicado. Detalle completo: [`docs/estado.md`](docs/estado.md).
 
 ## Estructura
 

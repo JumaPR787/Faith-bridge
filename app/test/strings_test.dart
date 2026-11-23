@@ -23,6 +23,9 @@ void main() {
     for (final st in ['trial', 'active', 'cancelled_active', 'billing_issue', 'grace', 'expired', 'refunded', 'none']) {
       if (!kStrings.containsKey('status_$st')) missing.add('status_$st');
     }
+    for (final k in ['role_owner', 'role_admin', 'role_member', 'session_scheduled', 'session_live', 'session_ended']) {
+      if (!kStrings.containsKey(k)) missing.add(k);
+    }
     for (final r in ['quota_exhausted', 'too_long', 'empty', 'no_entitlement']) {
       if (!kStrings.containsKey('reason_$r')) missing.add('reason_$r');
     }

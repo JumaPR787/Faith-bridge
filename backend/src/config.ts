@@ -62,6 +62,11 @@ const EnvSchema = z.object({
   COST_TRANSLATION_INPUT_USD_PER_MTOK: z.coerce.number().default(0.1),
   COST_TRANSLATION_OUTPUT_USD_PER_MTOK: z.coerce.number().default(0.5),
   ALERT_WEBHOOK_URL: z.string().url().optional(),
+  // Modo iglesia (fase 2). Se habilita además con app_config.church_mode_enabled.
+  LISTENER_TOKEN_SECRET: z.string().min(32).optional(),
+  CHURCH_MAX_LISTENERS: z.coerce.number().int().min(1).max(500).default(30),
+  CHURCH_JOIN_HOURS: z.coerce.number().int().min(1).max(24).default(6),
+  JOIN_ATTEMPTS_PER_MINUTE: z.coerce.number().int().min(1).default(10),
   // Purga de retención programada dentro del servidor (0 = desactivada).
   PURGE_INTERVAL_HOURS: z.coerce.number().min(0).default(6),
 });
@@ -92,5 +97,6 @@ function assertProductionSafety(cfg: Config): void {
   if (!cfg.ANTHROPIC_API_KEY) missing.push("ANTHROPIC_API_KEY");
   if (!cfg.REVENUECAT_SECRET_API_KEY) missing.push("REVENUECAT_SECRET_API_KEY");
   if (!cfg.REVENUECAT_WEBHOOK_AUTH || cfg.REVENUECAT_WEBHOOK_AUTH.length < 24) missing.push("REVENUECAT_WEBHOOK_AUTH (>=24 chars)");
+  if (!cfg.LISTENER_TOKEN_SECRET) missing.push("LISTENER_TOKEN_SECRET (>=32 chars)");
   if (missing.length) throw new Error(`Unsafe ${cfg.APP_ENV} configuration: ${missing.join("; ")}`);
 }

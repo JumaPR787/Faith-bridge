@@ -23,6 +23,7 @@ class LiveController extends ChangeNotifier with WidgetsBindingObserver {
     required this.save,
     required this.keepScreenOn,
     this.onUsage,
+    this.churchSessionId,
   }) : store = TranscriptStore(translationEnabled: target != null);
 
   final AudioSource audio;
@@ -32,6 +33,12 @@ class LiveController extends ChangeNotifier with WidgetsBindingObserver {
   final bool save;
   final bool keepScreenOn;
   final void Function(int remainingSeconds)? onUsage;
+
+  /// Modo iglesia: el organizador transmite para esta sesión.
+  final String? churchSessionId;
+
+  /// Asistentes conectados (solo modo iglesia).
+  int listeners = 0;
   final TranscriptStore store;
 
   LivePhase phase = LivePhase.idle;
@@ -73,7 +80,7 @@ class LiveController extends ChangeNotifier with WidgetsBindingObserver {
     phase = LivePhase.connecting;
     _notify();
     final conn = connectionFactory(
-      LiveStartParams(sourceLang: source.code, targetLang: target?.code, saveTranscript: save),
+      LiveStartParams(sourceLang: source.code, targetLang: target?.code, saveTranscript: save, churchSessionId: churchSessionId),
       () => store.lastSeq,
     );
     _conn = conn;
@@ -131,6 +138,9 @@ class LiveController extends ChangeNotifier with WidgetsBindingObserver {
         sessionSeconds = (e['sessionSeconds'] as num).toInt();
         remainingSeconds = (e['remainingSeconds'] as num).toInt();
         onUsage?.call(remainingSeconds);
+        _notify();
+      case 'listeners':
+        listeners = (e['count'] as num).toInt();
         _notify();
       case 'quota_warning':
         quotaWarning = true;

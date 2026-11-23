@@ -66,6 +66,18 @@ Sesión de 90 minutos con la pantalla encendida y el brillo al 50 %. Anota el % 
 | 15 | Usuario A intenta abrir la transcripción de B (por id) | 404 |
 | 16 | Eliminar la cuenta | Datos borrados; volver a iniciar sesión crea una cuenta vacía |
 
+## 6.1 Modo iglesia (cuando se habilite)
+
+| # | Caso | Esperado |
+|---|---|---|
+| 17 | Consola → interfaz USB → teléfono del organizador | La app capta la entrada USB (no el micrófono interno); el texto es claro |
+| 18 | 10–30 asistentes en teléfonos distintos durante 90 min | Todos reciben el mismo texto; el organizador ve el número correcto |
+| 19 | Escanear el QR con la app; escribir el código a mano | Ambos funcionan; un código vencido o terminado se rechaza |
+| 20 | El organizador pierde la red 30 s | Los asistentes ven «transmisión interrumpida» y continúan al volver |
+| 21 | El organizador termina la sesión | Todos ven «La sesión terminó»; el código deja de servir |
+| 22 | Batería del organizador (90 min, conectado a la corriente) y de un asistente | Anotar |
+| 23 | Asistentes en datos móviles | Consumo de datos bajo (medir) |
+
 ## 7. Plantilla de resultados
 
 | Fecha | Dispositivo | Idioma/acento | Condición | WER | Fidelidad (1–5) | Latencia mediana / p90 | USD/min | Batería 90 min | Notas |

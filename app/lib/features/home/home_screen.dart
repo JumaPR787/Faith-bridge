@@ -48,7 +48,7 @@ class HomeScreen extends StatelessWidget {
               icon: Icons.church_outlined,
               title: s.t('mode_church'),
               subtitle: s.t('mode_church_desc'),
-              trailing: Chip(label: Text(s.t('coming_soon'))),
+              trailing: account.churchEnabled ? null : Chip(label: Text(s.t('coming_soon'))),
               onTap: () => _go(context, const ChurchScreen()),
             ),
             _ModeTile(icon: Icons.translate, title: s.t('text_translate'), subtitle: s.t('text_translate_desc'), onTap: () => _go(context, const TextTranslateScreen())),

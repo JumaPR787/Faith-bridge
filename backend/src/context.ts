@@ -1,5 +1,6 @@
 import type { FastifyBaseLogger } from "fastify";
 import type { TokenVerifier } from "./auth.js";
+import type { ChurchRegistry } from "./church/registry.js";
 import type { RevenueCatClient } from "./billing/revenuecat.js";
 import type { Config } from "./config.js";
 import type { Db } from "./db.js";
@@ -21,6 +22,7 @@ export interface AppContext {
   quota: QuotaService;
   guard: OpsGuard;
   registry: SessionRegistry;
+  church: ChurchRegistry;
   /** Eliminación de la cuenta en el proveedor de autenticación. */
   deleteAuthUser: (userId: string) => Promise<void>;
   liveFlushIntervalMs?: number;

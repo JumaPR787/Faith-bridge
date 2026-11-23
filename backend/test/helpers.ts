@@ -9,6 +9,7 @@ import type { RevenueCatClient } from "../src/billing/revenuecat.js";
 import { loadConfig, type Config } from "../src/config.js";
 import type { AppContext } from "../src/context.js";
 import { createDb, type Db } from "../src/db.js";
+import { ChurchRegistry } from "../src/church/registry.js";
 import { SessionRegistry } from "../src/live/session.js";
 import { OpsGuard } from "../src/ops/guard.js";
 import { FakeSttProvider } from "../src/providers/stt/fake.js";
@@ -31,6 +32,7 @@ export function testConfig(extra: Record<string, string> = {}): Config {
     REVENUECAT_WEBHOOK_AUTH: WEBHOOK_AUTH,
     LOG_LEVEL: "fatal",
     RESUME_GRACE_SECONDS: "2",
+    LISTENER_TOKEN_SECRET: "listener-secret-listener-secret-0123",
     ...extra,
   });
 }
@@ -115,6 +117,7 @@ export async function startServer(opts: { stt?: SttProvider; translator?: Transl
     quota: new QuotaService(cfg),
     guard: new OpsGuard(db, cfg, app.log),
     registry: new SessionRegistry(),
+    church: new ChurchRegistry(db, app.log),
     deleteAuthUser: async (id) => {
       await db.query("delete from auth.users where id = $1", [id]);
     },

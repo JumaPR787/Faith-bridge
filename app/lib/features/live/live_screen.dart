@@ -11,18 +11,21 @@ import '../../data/audio_capture.dart';
 import '../../data/live_connection.dart';
 import '../../data/settings_controller.dart';
 import '../../domain/models.dart';
-import '../../domain/transcript_store.dart';
 import '../common.dart';
+import 'captions_view.dart';
 import 'live_controller.dart';
 
 class LiveScreen extends StatefulWidget {
-  const LiveScreen({super.key, required this.source, required this.display, required this.save, this.controller});
+  const LiveScreen({super.key, required this.source, required this.display, required this.save, this.controller, this.churchSessionId});
   final Lang source;
   final DisplayMode display;
   final bool save;
 
   /// Inyectable para pruebas de widgets.
   final LiveController? controller;
+
+  /// Modo iglesia: el organizador transmite para esta sesión.
+  final String? churchSessionId;
 
   @override
   State<LiveScreen> createState() => _LiveScreenState();
@@ -54,6 +57,7 @@ class _LiveScreenState extends State<LiveScreen> {
           save: widget.save,
           keepScreenOn: settings.keepScreenOn,
           onUsage: account.updateQuotaRemaining,
+          churchSessionId: widget.churchSessionId,
         );
     _c.addListener(_onChange);
     _scroll.addListener(_onScroll);
@@ -184,60 +188,13 @@ class _LiveScreenState extends State<LiveScreen> {
       default:
         break;
     }
-    final segments = _c.store.segments;
-    final interim = _c.store.interim;
-    final scale = settings.captionScale;
-    final base = theme.textTheme.headlineSmall!.copyWith(fontSize: 22 * scale, height: 1.35);
-    final secondary = base.copyWith(fontSize: 18 * scale, color: theme.colorScheme.onSurfaceVariant);
-    final showOriginal = widget.display != DisplayMode.translation;
-    final showTranslation = widget.display != DisplayMode.original;
-
-    final children = <Widget>[];
-    for (var i = 0; i < segments.length; i++) {
-      final seg = segments[i];
-      final isLast = i == segments.length - 1;
-      final parts = <Widget>[];
-      if (showTranslation) {
-        final String text;
-        final TextStyle style;
-        switch (seg.translationState) {
-          case TranslationState.ok:
-            text = seg.translation!;
-            style = base;
-          case TranslationState.failed:
-            text = s.t('translation_unavailable');
-            style = secondary.copyWith(fontStyle: FontStyle.italic);
-          case TranslationState.pending:
-          case TranslationState.none:
-            text = s.t('translating');
-            style = secondary.copyWith(fontStyle: FontStyle.italic);
-        }
-        parts.add(Text(text, style: style));
-      }
-      if (showOriginal) {
-        parts.add(Text(seg.text, style: showTranslation ? secondary : base));
-      }
-      children.add(Semantics(
-        liveRegion: isLast,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: parts),
-        ),
-      ));
-    }
-    if (interim != null && showOriginal) {
-      children.add(Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Text(interim, style: secondary.copyWith(fontStyle: FontStyle.italic)),
-      ));
-    }
-    if (_c.phase == LivePhase.ended) {
-      children.add(_EndedSummary(c: _c));
-    }
-    if (segments.isEmpty && interim == null && _c.phase != LivePhase.ended) {
-      return Center(child: Padding(padding: const EdgeInsets.all(24), child: Text(s.t('listening'), textAlign: TextAlign.center, style: secondary)));
-    }
-    return ListView(controller: _scroll, padding: const EdgeInsets.fromLTRB(20, 8, 20, 24), children: children);
+    return CaptionsView(
+      store: _c.store,
+      display: widget.display,
+      scale: settings.captionScale,
+      controller: _scroll,
+      footer: _c.phase == LivePhase.ended ? _EndedSummary(c: _c) : null,
+    );
   }
 }
 
@@ -294,7 +251,12 @@ class _StatusBar extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 8),
-        Expanded(child: Text(conn, overflow: TextOverflow.ellipsis)),
+        Expanded(
+          child: Text(
+            c.churchSessionId == null ? conn : '$conn · ${s.t('listeners_count')}: ${c.listeners}',
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
         Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
           Text('${s.t('elapsed')}: ${formatClock(c.sessionSeconds)}', style: theme.textTheme.bodySmall),
           Text('${s.t('remaining')}: ${formatMinutes(c.remainingSeconds)}', style: theme.textTheme.bodySmall),

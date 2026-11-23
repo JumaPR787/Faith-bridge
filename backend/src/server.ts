@@ -4,6 +4,7 @@ import { HttpRevenueCatClient, type RevenueCatClient } from "./billing/revenueca
 import { loadConfig } from "./config.js";
 import type { AppContext } from "./context.js";
 import { createDb } from "./db.js";
+import { ChurchRegistry } from "./church/registry.js";
 import { SessionRegistry } from "./live/session.js";
 import { OpsGuard } from "./ops/guard.js";
 import { DeepgramProvider } from "./providers/stt/deepgram.js";
@@ -47,6 +48,7 @@ const ctx: AppContext = {
   quota: new QuotaService(cfg),
   guard: new OpsGuard(db, cfg, app.log),
   registry: new SessionRegistry(),
+  church: new ChurchRegistry(db, app.log),
   deleteAuthUser: async (userId) => {
     if (cfg.SUPABASE_URL && cfg.SUPABASE_SERVICE_ROLE_KEY) {
       const res = await fetch(`${cfg.SUPABASE_URL}/auth/v1/admin/users/${userId}`, {

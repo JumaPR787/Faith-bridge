@@ -14,9 +14,14 @@ export const StartMessage = z.object({
   sourceLang: z.enum(["en", "es"]),
   targetLang: z.enum(["en", "es"]).nullable(),
   saveTranscript: z.boolean().default(false),
+  /** "church": transmisión del organizador a los oyentes de una sesión de iglesia. */
+  mode: z.enum(["personal", "church"]).default("personal"),
+  churchSessionId: z.string().uuid().optional(),
   resumeSessionId: z.string().uuid().optional(),
   lastSeq: z.number().int().min(-1).optional(),
-}).refine((m) => m.targetLang === null || m.targetLang !== m.sourceLang, { message: "same_language" });
+})
+  .refine((m) => m.targetLang === null || m.targetLang !== m.sourceLang, { message: "same_language" })
+  .refine((m) => m.mode !== "church" || !!m.churchSessionId || !!m.resumeSessionId, { message: "church_session_required" });
 export type StartMessage = z.infer<typeof StartMessage>;
 
 export const ControlMessage = z.discriminatedUnion("type", [
@@ -49,6 +54,11 @@ export type ErrorCode =
   | "rate_limited"
   | "session_not_found"
   | "stt_unavailable"
+  | "church_mode_disabled"
+  | "not_allowed"
+  | "no_church_plan"
+  | "session_full"
+  | "session_ended"
   | "internal";
 
 export interface QuotaInfo {
@@ -78,4 +88,10 @@ export type ServerEvent =
   | { type: "provider_status"; status: "connected" | "reconnecting" | "paused" }
   | { type: "ended"; reason: EndReason; transcriptId: string | null; sessionSeconds: number }
   | { type: "error"; code: ErrorCode; fatal: boolean }
-  | { type: "pong" };
+  | { type: "pong" }
+  /** Al transmisor: cantidad de oyentes conectados. */
+  | { type: "listeners"; count: number }
+  /** A los oyentes. */
+  | { type: "joined"; churchSessionId: string; orgName: string; sourceLang: string; targetLang: string | null; broadcasting: boolean }
+  | { type: "waiting" }
+  | { type: "broadcast_interrupted" };

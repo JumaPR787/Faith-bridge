@@ -91,7 +91,7 @@ No se encontró ninguna incompatibilidad que obligue a usar código nativo.
   - `npm run db:purge` (diario) borra lo vencido;
   - los webhooks antiguos se borran a los 90 días.
 
-## 5. Modo iglesia (fase 2) — preparado, no habilitado
+## 5. Modo iglesia (fase 2) — implementado, deshabilitado por interruptor
 
 La arquitectura ya contempla:
 
@@ -100,15 +100,14 @@ La arquitectura ya contempla:
 - Aislamiento por organización (`is_org_member`), comprobado con pruebas.
 - `app_config.church_mode_enabled=false`.
 
-Falta implementar:
+**Implementado:**
+- rutas de organizaciones, miembros, sesiones y para unirse;
+- WebSocket de oyente de solo lectura (`/v1/church/listen`);
+- accesos anónimos firmados;
+- `ChurchRegistry`, que reparte una transmisión a N oyentes;
+- pantallas de organizador y asistente con QR.
 
-- rutas para crear y unirse a una sesión (código/QR);
-- un WebSocket de oyente (solo lectura, sin micrófono);
-- la atestación de autorización del organizador;
-- límites de asistentes;
-- la medición de tráfico.
-
-Las opciones de entrada de audio de una consola están en [`modo-iglesia.md`](modo-iglesia.md).
+Detalle, garantías probadas y pasos para habilitarlo en [`modo-iglesia.md`](modo-iglesia.md).
 
 ## 6. Fases
 
@@ -117,7 +116,7 @@ Las opciones de entrada de audio de una consola están en [`modo-iglesia.md`](mo
 | 1. MVP personal | Micrófono → STT → traducción → subtítulos; cuotas; historial opcional; traducción de texto; suscripción y prueba | Código completo y probado con proveedores simulados; **falta probar con claves reales y en dispositivos** |
 | 2. Validación | Pruebas reales (calidad, latencia, costo, batería, 90 min), sandbox de tiendas, decisión de modelo | Pendiente (requiere cuentas) |
 | 3. Publicación | Fichas, privacidad, pruebas cerradas, TestFlight | Documentado; pendiente de cuentas |
-| 4. Modo iglesia | Organizador/asistentes, QR, plan Iglesia | Estructura de datos y diseño listos |
+| 4. Modo iglesia | Organizador/asistentes, QR, plan Iglesia | Código implementado y probado con proveedores simulados; **apagado**. Falta el producto del plan Iglesia en las tiendas y las pruebas en el lugar |
 
 ## 7. Entornos
 

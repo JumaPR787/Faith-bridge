@@ -59,6 +59,11 @@ export class LiveSession {
   state: "active" | "paused" | "ending" | "ended" = "active";
 
   private subscribers = new Set<Sink>();
+  /** Transmisor(es): el teléfono que envía el audio. */
+  private primaries = new Set<Sink>();
+  /** Oyentes del modo iglesia: solo reciben texto. */
+  private listeners = new Set<Sink>();
+  endReason: EndReason | null = null;
   private stt: SttStream | null = null;
   private segmenter: Segmenter;
   private segments = new Map<number, StoredSegment>();
@@ -76,7 +81,8 @@ export class LiveSession {
   private translationQueue: Array<() => void> = [];
   private pending = new Set<Promise<void>>();
   private abort = new AbortController();
-  private onEnded: ((s: LiveSession) => void) | null = null;
+  private endHooks: Array<(s: LiveSession) => void | Promise<void>> = [];
+  private listenerHooks: Array<(count: number) => void> = [];
   private endPromise: Promise<void> | null = null;
 
   constructor(
@@ -108,8 +114,29 @@ export class LiveSession {
     return this.p.target !== null && this.deps.translator !== null;
   }
 
-  setOnEnded(fn: (s: LiveSession) => void): void {
-    this.onEnded = fn;
+  /** Registra una función que se ejecuta al terminar la sesión (admite varias). */
+  setOnEnded(fn: (s: LiveSession) => void | Promise<void>): void {
+    this.endHooks.push(fn);
+  }
+
+  onListenersChanged(fn: (count: number) => void): void {
+    this.listenerHooks.push(fn);
+  }
+
+  get listenerCount(): number {
+    return this.listeners.size;
+  }
+
+  private notifyListeners(): void {
+    const count = this.listeners.size;
+    for (const p of this.primaries) {
+      try {
+        p({ type: "listeners", count });
+      } catch {
+        /* ignorar */
+      }
+    }
+    for (const h of this.listenerHooks) h(count);
   }
 
   async start(): Promise<void> {
@@ -119,10 +146,15 @@ export class LiveSession {
 
   // ───────────── Suscriptores ─────────────
 
-  attach(sink: Sink, lastSeq = -1): void {
-    if (this.graceTimer) {
-      clearTimeout(this.graceTimer);
-      this.graceTimer = null;
+  attach(sink: Sink, lastSeq = -1, role: "primary" | "listener" = "primary"): void {
+    if (role === "primary") {
+      if (this.graceTimer) {
+        clearTimeout(this.graceTimer);
+        this.graceTimer = null;
+      }
+      this.primaries.add(sink);
+    } else {
+      this.listeners.add(sink);
     }
     this.subscribers.add(sink);
     // Reenvía lo que el cliente no recibió (reconexión). Orden por seq.
@@ -131,11 +163,19 @@ export class LiveSession {
       sink({ type: "segment", ...s.seg });
       if (s.translation) sink({ type: "translation", seq: s.seg.seq, ...s.translation });
     }
+    if (role === "listener") this.notifyListeners();
+    else sink({ type: "listeners", count: this.listeners.size });
   }
 
   detach(sink: Sink): void {
     this.subscribers.delete(sink);
-    if (this.subscribers.size === 0 && this.state !== "ending" && this.state !== "ended") {
+    if (this.listeners.delete(sink)) {
+      if (!this.closing()) this.notifyListeners();
+      return;
+    }
+    this.primaries.delete(sink);
+    // Sin transmisor (aunque haya oyentes): periodo de gracia y luego fin.
+    if (this.primaries.size === 0 && !this.closing()) {
       this.graceTimer = setTimeout(() => void this.end("client_gone"), this.deps.cfg.RESUME_GRACE_SECONDS * 1000);
       this.graceTimer.unref();
     }
@@ -390,6 +430,7 @@ export class LiveSession {
 
   private async doEnd(reason: EndReason): Promise<void> {
     this.state = "ending";
+    this.endReason = reason;
     if (this.flushTimer) clearInterval(this.flushTimer);
     if (this.graceTimer) clearTimeout(this.graceTimer);
     this.clearPauseTimers();
@@ -422,11 +463,22 @@ export class LiveSession {
     const stillExists = this.p.transcriptId
       ? ((await this.deps.db.query("select 1 from public.transcripts where id = $1", [this.p.transcriptId]).catch(() => ({ rowCount: 0 }))).rowCount ?? 0) > 0
       : false;
+    // Los ajustes de cierre (registro, estado de la sesión de iglesia, uso)
+    // terminan ANTES de avisar a los clientes, para que no haya estados intermedios.
+    for (const h of this.endHooks) {
+      try {
+        await h(this);
+      } catch (e) {
+        this.logErr("end_hook", e);
+      }
+    }
     this.state = "ended";
     this.broadcast({ type: "ended", reason, transcriptId: stillExists ? this.p.transcriptId : null, sessionSeconds: this.sessionSeconds });
     this.subscribers.clear();
+    this.primaries.clear();
+    this.listeners.clear();
     this.segments.clear(); // no se conserva texto en memoria al terminar
-    this.onEnded?.(this);
+
   }
 
   private logErr(where: string, e: unknown): void {
@@ -441,9 +493,10 @@ export class SessionRegistry {
   private byId = new Map<string, LiveSession>();
   private byUser = new Map<string, string>();
 
-  add(s: LiveSession): void {
+  /** trackUser=false para transmisiones de iglesia (no reemplazan la sesión personal). */
+  add(s: LiveSession, opts: { trackUser?: boolean } = {}): void {
     this.byId.set(s.id, s);
-    this.byUser.set(s.userId, s.id);
+    if (opts.trackUser !== false) this.byUser.set(s.userId, s.id);
     s.setOnEnded((x) => this.remove(x));
   }
 
