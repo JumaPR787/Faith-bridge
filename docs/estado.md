@@ -51,4 +51,4 @@
 4. **Hosting del backend** y dominio (`api.tudominio.com`).
 5. **Autorización** para crear cuentas y gastar en: Supabase Pro, Deepgram, Anthropic, RevenueCat, Apple, Google y SMTP.
 6. ~~Keyterms de Deepgram~~ → **activados** (glosario en el reconocimiento, con respaldo automático si Deepgram los rechaza). Pendiente: confirmar el precio y medir la mejora en el reconocimiento.
-7. **Plan de texto:** hoy, traducir texto pegado cuesta 1 minuto de cuota por cada 1,000 caracteres. ¿Te parece bien?
+7. ~~Plan de texto~~ → **decidido: 1 minuto por cada 1,000 caracteres** (redondeo hacia arriba; se muestra y se confirma antes de procesar).

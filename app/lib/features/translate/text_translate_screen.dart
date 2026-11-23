@@ -68,6 +68,8 @@ class _TextTranslateScreenState extends State<TextTranslateScreen> {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
+            Card(child: ListTile(leading: const Icon(Icons.info_outline), title: Text(s.t('text_cost_rule')))),
+            const SizedBox(height: 12),
             Text(s.t('direction'), style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
             SegmentedButton<Lang>(

@@ -22,6 +22,7 @@ class HelpScreen extends StatelessWidget {
           q('help_bible'),
           q('ambient_notice'),
           q('minute_counting'),
+          q('text_cost_rule'),
           q('how_to_cancel'),
           ListTile(
             contentPadding: EdgeInsets.zero,

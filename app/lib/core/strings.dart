@@ -150,6 +150,10 @@ const Map<String, List<String>> kStrings = {
   'copied': ['Copiado', 'Copied'],
 
   // Traducción de texto
+  'text_cost_rule': [
+    'Traducir texto usa tus minutos: 1 minuto por cada 1,000 caracteres (se redondea al minuto siguiente). Antes de procesar verás cuánto usará y podrás cancelar.',
+    'Translating text uses your minutes: 1 minute per 1,000 characters (rounded up to the next minute). Before processing you will see how much it will use and can cancel.'
+  ],
   'paste_text': ['Pega o escribe el texto', 'Paste or type the text'],
   'direction': ['Dirección', 'Direction'],
   'en_to_es': ['Inglés → Español', 'English → Spanish'],

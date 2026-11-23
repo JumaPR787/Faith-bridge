@@ -11,3 +11,17 @@ describe("configuración", () => {
     expect(cfg.COST_STT_USD_PER_MIN).toBeCloseTo(0.009);
   });
 });
+
+describe("regla de traducción de texto", () => {
+  it("1 minuto por cada 1,000 caracteres, redondeado hacia arriba", async () => {
+    const { QuotaService } = await import("../src/quota/quota.js");
+    const cfg = loadConfig({ DATABASE_URL: "postgres://x", SUPABASE_JWT_SECRET: "x".repeat(32) });
+    expect(cfg.TEXT_CHARS_PER_QUOTA_MINUTE).toBe(1000);
+    const q = new QuotaService(cfg);
+    expect(q.textCostSeconds(0)).toBe(0);
+    expect(q.textCostSeconds(1)).toBe(60);
+    expect(q.textCostSeconds(1000)).toBe(60);
+    expect(q.textCostSeconds(1001)).toBe(120);
+    expect(q.textCostSeconds(20000)).toBe(1200);
+  });
+});
