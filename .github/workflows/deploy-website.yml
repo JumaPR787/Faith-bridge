@@ -1,0 +1,43 @@
+name: Deploy website (Cloudflare Pages)
+
+# Despliegue MANUAL: Actions → «Deploy website (Cloudflare Pages)» → Run workflow.
+# Secretos del repositorio: CLOUDFLARE_API_TOKEN (permiso «Cloudflare Pages: Edit»),
+#                           CLOUDFLARE_ACCOUNT_ID.
+# Variables del repositorio: COMPANY_NAME, SUPPORT_EMAIL, DELETION_DAYS, BACKUP_DAYS,
+#   APPLE_TEAM_ID, ANDROID_CERT_SHA256 (huellas separadas por comas), APP_STORE_URL, PLAY_STORE_URL.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-website
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r website/requirements.txt
+      # Falla (y no publica) si los textos legales siguen siendo borradores.
+      - run: >
+          python scripts/build_website.py
+          --company "${{ vars.COMPANY_NAME }}"
+          --support-email "${{ vars.SUPPORT_EMAIL }}"
+          --deletion-days "${{ vars.DELETION_DAYS || '30' }}"
+          --backup-days "${{ vars.BACKUP_DAYS || '30' }}"
+          --apple-team-id "${{ vars.APPLE_TEAM_ID }}"
+          --android-sha256 "${{ vars.ANDROID_CERT_SHA256 }}"
+          --app-store-url "${{ vars.APP_STORE_URL }}"
+          --play-store-url "${{ vars.PLAY_STORE_URL }}"
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy website/public --project-name=faithbridge-web --branch=main
