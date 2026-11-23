@@ -48,7 +48,7 @@ Reglas adicionales:
 
 ### App Store Connect
 
-1. Crea la app con el Bundle ID (provisional: `com.faithbridge.app`).
+1. Crea la app con el Bundle ID definitivo `com.faithbridge.app`.
 2. Firma el acuerdo **Paid Apps Agreement** y completa los datos bancarios y fiscales.
 3. Ve a **Monetización → Suscripciones → Grupo** «FaithBridge Personal» → producto `fb_personal_monthly`, duración 1 mes, precio USD 5.99. La tienda genera los precios locales.
 4. **Oferta introductoria:** «Gratis», duración 1 semana, para nuevos suscriptores.

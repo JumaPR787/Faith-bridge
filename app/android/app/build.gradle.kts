@@ -13,7 +13,7 @@ val keystoreProperties = Properties().apply {
 }
 
 android {
-    namespace = "com.faithbridge.faithbridge"
+    namespace = "com.faithbridge.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -23,7 +23,7 @@ android {
     }
 
     defaultConfig {
-        // Identificador PROVISIONAL: confirmar antes de la primera publicación (no se puede cambiar después).
+        // Identificador DEFINITIVO. No se puede cambiar después de publicar en Google Play.
         applicationId = "com.faithbridge.app"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.

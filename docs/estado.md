@@ -46,7 +46,7 @@
 ## ❓ Decisiones que necesito de ti
 
 1. ~~Modelo de traducción~~ → **decidido: `claude-haiku-5-5`** (margen estimado ~USD 2.40 por usuario con uso completo). Pendiente: validar la fidelidad con predicaciones reales (`pruebas-dispositivos.md` §2).
-2. **Identificadores definitivos** (`com.faithbridge.app` es provisional) y la verificación de la marca «FaithBridge».
+2. ~~Identificadores~~ → **decidido: `com.faithbridge.app`** en Android e iOS. Pendiente: verificar que la marca «FaithBridge» no infrinja marcas registradas.
 3. **Tipo de cuenta de Google Play:** personal (exige 12 testers × 14 días) u organización (requiere D-U-N-S).
 4. **Hosting del backend** y dominio (`api.tudominio.com`).
 5. **Autorización** para crear cuentas y gastar en: Supabase Pro, Deepgram, Anthropic, RevenueCat, Apple, Google y SMTP.

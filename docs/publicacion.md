@@ -3,16 +3,16 @@
 > **Nada se ha publicado.** No se crearon cuentas ni se firmó nada. No se puede garantizar la aprobación de ninguna tienda.
 > Los requisitos se verificaron el 23-nov-2026 con fuentes oficiales cuando fue posible. Revísalos de nuevo antes de enviar.
 
-## 1. Identificadores (decisión pendiente)
+## 1. Identificadores (definitivos)
 
-| Plataforma | Valor provisional | Dónde se cambia |
+| Plataforma | Valor definitivo | Dónde está |
 |---|---|---|
 | Android `applicationId` | `com.faithbridge.app` | `app/android/app/build.gradle.kts` |
 | iOS Bundle ID | `com.faithbridge.app` | `app/ios/Runner.xcodeproj` (`PRODUCT_BUNDLE_IDENTIFIER`) |
 | Nombre visible | FaithBridge | `AndroidManifest.xml` / `Info.plist` |
 | Producto de suscripción | `fb_personal_monthly` | Tiendas + RevenueCat |
 
-⚠️ **Estos identificadores no se pueden cambiar después de publicar.** Usa un dominio que controles (por ejemplo `com.tudominio.faithbridge`). Antes de usar el nombre «FaithBridge», verifica que no infrinja marcas registradas.
+⚠️ **Estos identificadores no se pueden cambiar después de publicar.** Quedaron fijados en `com.faithbridge.app`. Regístralos tal cual en App Store Connect (Identifiers) y en Google Play Console. Antes de publicar, verifica que el nombre «FaithBridge» no infrinja marcas registradas.
 
 ## 2. Firma — instrucciones seguras
 
