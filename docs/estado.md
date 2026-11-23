@@ -48,7 +48,7 @@
 1. ~~Modelo de traducción~~ → **decidido: `claude-haiku-5-5`** (margen estimado ~USD 2.05 por usuario con uso completo, incluidos los keyterms). Pendiente: validar la fidelidad con predicaciones reales (`pruebas-dispositivos.md` §2).
 2. ~~Identificadores~~ → **decidido: `com.faithbridge.app`** en Android e iOS. Pendiente: verificar que la marca «FaithBridge» no infrinja marcas registradas.
 3. ~~Tipo de cuenta de Google Play~~ → **decidido: organización** (sin el requisito de 12 testers × 14 días). Pendiente: entidad legal, D-U-N-S y verificación (ver `publicacion.md` §4.1).
-4. ~~Hosting del backend~~ → **decidido: Fly.io** (ver `despliegue-fly.md`). Pendiente: dominio propio (`api.tudominio.com`) y autorización para crear la cuenta.
+4. ~~Hosting del backend~~ → **decidido: Fly.io** (ver `despliegue-fly.md`). Cuentas de Fly.io y Supabase **autorizadas**; debes crearlas tú (correo, términos y tarjeta). Luego ejecuta `scripts/fly-setup.sh` (ver `despliegue-fly.md` §1.1). Pendiente: dominio propio (`api.tudominio.com`).
 5. **Autorización** para crear cuentas y gastar en: Supabase Pro, Deepgram, Anthropic, RevenueCat, Apple, Google y SMTP.
 6. ~~Keyterms de Deepgram~~ → **activados** (glosario en el reconocimiento, con respaldo automático si Deepgram los rechaza). Pendiente: confirmar el precio y medir la mejora en el reconocimiento.
 7. ~~Plan de texto~~ → **decidido: 1 minuto por cada 1,000 caracteres** (redondeo hacia arriba; se muestra y se confirma antes de procesar).

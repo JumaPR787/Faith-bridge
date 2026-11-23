@@ -24,6 +24,42 @@
 
 ⚠️ **Un despliegue reinicia la máquina y corta las sesiones en vivo de ese momento.** La app intenta reconectar, pero como la sesión vivía en memoria, el usuario tendrá que iniciar una nueva. **Despliega fuera del horario de los servicios** (por ejemplo, no el domingo por la mañana).
 
+## 1.1 Crear las cuentas (lo haces tú, unos 15 minutos)
+
+Estas cuentas exigen tu correo, aceptar términos y (en Fly.io) una tarjeta. Por eso las creas tú.
+
+**Supabase** ([supabase.com/dashboard](https://supabase.com/dashboard)):
+1. Regístrate y crea una organización a nombre de tu empresa.
+2. **New project:** nombre `faithbridge`, región **East US (North Virginia)** (`us-east-1`), contraseña de base de datos larga guardada en tu gestor de contraseñas.
+3. Plan: empieza en Free para configurar; pasa a **Pro (~USD 25/mes)** antes de lanzar (el plan Free pausa los proyectos inactivos).
+4. **SQL Editor:** pega y ejecuta `db/migrations/0001_core.sql` y luego `0002_church_mode.sql`. También puedes dejar que Fly las aplique al desplegar.
+5. **Authentication → Email:** activa OTP y pon `{{ .Token }}` en la plantilla «Magic Link».
+6. Copia en `backend/.env.production`:
+   - `DATABASE_URL`: Connect → **Session pooler**;
+   - `SUPABASE_URL`;
+   - `SUPABASE_JWKS_URL` = `SUPABASE_URL` + `/auth/v1/.well-known/jwks.json`;
+   - `SUPABASE_SERVICE_ROLE_KEY`;
+   - `DATABASE_CA_CERT`: la **ruta** del certificado descargado (Database Settings → SSL Configuration → Download certificate).
+
+**Fly.io** ([fly.io/app/sign-up](https://fly.io/app/sign-up)):
+1. Regístrate (mejor con una organización a nombre de tu empresa) y añade la tarjeta.
+2. En **Billing**, configura un límite o alerta de gasto.
+3. Instala flyctl (§2).
+
+**Luego, en tu computadora** (desde la raíz del repositorio):
+
+```bash
+cp backend/.env.example backend/.env.production   # complétalo; NO se sube a git
+bash scripts/fly-setup.sh backend/.env.production
+```
+
+El script:
+- crea la app si no existe;
+- carga los secretos sin mostrarlos (`fly secrets import`);
+- despliega con una sola máquina y comprueba `/healthz`.
+
+Si `REVENUECAT_WEBHOOK_AUTH` está vacío, lo genera. Para desplegar necesitas también las claves de Deepgram, Anthropic y RevenueCat; sin ellas, el servidor se niega a arrancar en producción.
+
 ## 2. Instalar flyctl y crear la app
 
 ```bash

@@ -3,3 +3,7 @@
 .env
 .env.*
 !.env.example
+
+# Variables de producción locales (nunca versionar)
+backend/.env.production
+*.crt
