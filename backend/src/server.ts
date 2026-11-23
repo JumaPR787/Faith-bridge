@@ -10,6 +10,7 @@ import { DeepgramProvider } from "./providers/stt/deepgram.js";
 import { FakeSttProvider } from "./providers/stt/fake.js";
 import { AnthropicTranslator } from "./providers/translation/anthropic.js";
 import { FakeTranslator } from "./providers/translation/fake.js";
+import { runPurge } from "./ops/purge.js";
 import { QuotaService } from "./quota/quota.js";
 
 const cfg = loadConfig();
@@ -72,7 +73,20 @@ if (cfg.STT_PROVIDER === "fake" || cfg.TRANSLATION_PROVIDER === "fake") {
   app.log.warn("⚠️  Running with SIMULATED providers (development only). No real speech recognition or translation.");
 }
 
+// Retención: purga al arrancar y luego periódicamente (no requiere cron externo).
+let purgeTimer: NodeJS.Timeout | null = null;
+if (cfg.PURGE_INTERVAL_HOURS > 0) {
+  const purge = () =>
+    runPurge(db)
+      .then((r) => app.log.info({ transcripts: r.transcripts }, "retention purge done"))
+      .catch((e) => app.log.error({ err: e instanceof Error ? e.message.slice(0, 120) : "unknown" }, "retention purge failed"));
+  setTimeout(purge, 60_000).unref();
+  purgeTimer = setInterval(purge, cfg.PURGE_INTERVAL_HOURS * 3600_000);
+  purgeTimer.unref();
+}
+
 async function shutdown() {
+  if (purgeTimer) clearInterval(purgeTimer);
   app.log.info("shutting down: ending live sessions");
   await Promise.allSettled(ctx.registry.all().map((s) => s.end("server_shutdown")));
   await app.close();

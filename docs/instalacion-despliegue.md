@@ -73,32 +73,18 @@ Sigue [`suscripciones.md`](suscripciones.md). Resultado:
 - `REVENUECAT_SECRET_API_KEY` y `REVENUECAT_WEBHOOK_AUTH` (backend);
 - `REVENUECAT_APPLE_KEY` y `REVENUECAT_GOOGLE_KEY`, que son claves **públicas** del SDK (app).
 
-## 6. Desplegar el backend
+## 6. Desplegar el backend (Fly.io)
 
-Necesitas cualquier servicio que ejecute contenedores Docker y admita WebSocket, por ejemplo:
-
-- Fly.io;
-- Render;
-- Railway;
-- Google Cloud Run (con sesiones largas configuradas);
-- un VPS.
+El backend se despliega en **Fly.io**. La guía completa está en [`despliegue-fly.md`](despliegue-fly.md). En resumen:
 
 ```bash
-cd backend
-docker build -t faithbridge-backend .
-# Variables: ver .env.example (todas las de producción son obligatorias; el arranque falla si falta alguna)
-docker run -p 8080:8080 --env-file .env faithbridge-backend
+fly apps create faithbridge-api
+fly secrets set DATABASE_URL=... DATABASE_CA_CERT="$(cat prod-ca-2021.crt)" ...   # ver la guía
+fly deploy --ha=false          # desde la raíz del repositorio; aplica las migraciones automáticamente
+curl https://faithbridge-api.fly.dev/healthz
 ```
 
-Además:
-
-- **HTTPS/WSS obligatorio**, con un dominio propio (por ejemplo `api.tudominio.com`).
-- **Tiempo de espera de inactividad del balanceador** de al menos 120 s, con WebSocket habilitado. Las sesiones duran hasta 3 h.
-- **Tarea diaria:** `npm run db:purge` (retención). Ejecútala con el cron del proveedor.
-- **Migraciones:** `npm run db:migrate` desde el repositorio. La imagen Docker no incluye `db/`.
-- **Una sola instancia al principio.** Las sesiones activas viven en memoria; la reanudación debe llegar a la misma instancia. Para escalar a varias instancias hay que usar «sticky sessions» por `sessionId` o un bus compartido (pendiente).
-- **Webhook en RevenueCat:** `https://api.tudominio.com/webhooks/revenuecat`, con la cabecera Authorization igual a `REVENUECAT_WEBHOOK_AUTH`.
-- Comprueba que el servidor responde: `GET https://api.tudominio.com/healthz`.
+Para probar la imagen en local (requiere Docker), constrúyela desde la raíz: `docker build -f backend/Dockerfile -t faithbridge-backend .`
 
 ## 7. Compilar la app
 

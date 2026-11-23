@@ -25,3 +25,16 @@ describe("regla de traducción de texto", () => {
     expect(q.textCostSeconds(20000)).toBe(1200);
   });
 });
+
+describe("conexión a la base de datos", () => {
+  it("con certificado raíz usa TLS verificado y quita sslmode de la URL", async () => {
+    const { pgConfig } = await import("../src/db.js");
+    const c = pgConfig("postgres://u:p@db.example.com:5432/postgres?sslmode=require", "-----BEGIN CERTIFICATE-----\nX\n-----END CERTIFICATE-----");
+    expect(c.connectionString).not.toContain("sslmode");
+    expect(c.ssl).toMatchObject({ rejectUnauthorized: true });
+  });
+  it("sin certificado deja la URL tal cual", async () => {
+    const { pgConfig } = await import("../src/db.js");
+    expect(pgConfig("postgres://localhost/x", undefined)).toEqual({ connectionString: "postgres://localhost/x" });
+  });
+});

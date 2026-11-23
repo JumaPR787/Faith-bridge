@@ -12,8 +12,8 @@ Todo lo de este documento son **estimaciones**. No prometen ganancias. Hay que c
 - La **traducción** puede costar casi nada o ser lo más caro. Depende del modelo de IA:
   - Claude **Haiku 5.5**: unos USD 0.001 por minuto → el plan de USD 5.99 **deja margen**.
   - Claude **Opus 5.5**: unos USD 0.024–0.055 por minuto → el plan de USD 5.99 **pierde dinero** con cualquier uso medio o alto.
-- Con Haiku 5.5, un usuario que gasta sus 300 minutos completos cuesta unos **USD 3.08** al mes (incluidos los keyterms). Tras la comisión de la tienda (15 %) entran USD 5.09. Quedan unos **USD 2.01** para pagar gastos fijos.
-- Con 10 clientes no se cubren los gastos fijos (~USD 94/mes). Con 100 clientes el resultado ya es positivo en los tres niveles de uso.
+- Con Haiku 5.5, un usuario que gasta sus 300 minutos completos cuesta unos **USD 3.04** al mes (incluidos los keyterms y el tráfico en Fly.io). Tras la comisión de la tienda (15 %) entran USD 5.09. Quedan unos **USD 2.05** para pagar gastos fijos.
+- Con 10 clientes no se cubren los gastos fijos (~USD 61/mes, con el backend en Fly.io). Con 100 clientes el resultado ya es positivo en los tres niveles de uso.
 - El plan Iglesia (USD 29.99 / 600 min) es rentable con Haiku 5.5 (~USD 20 de margen), porque los minutos **no** se multiplican por asistentes.
 
 ## 2. Tarifas usadas y fuentes
@@ -31,8 +31,8 @@ Todo lo de este documento son **estimaciones**. No prometen ganancias. Hay que c
 | Google Play, comisión de suscripciones | 15 % en total (desde 30-jun-2026 en EE. UU.: 10 % de servicio + tarifa de facturación) | [Blog de Android Developers, jun-2026](https://android-developers.googleblog.com/2026/06/play-expanded-billing.html) y terceros | Parcial. El desglose 10 % + 5 % proviene de terceros. |
 | RevenueCat | Gratis hasta USD 2,500 de ingreso mensual rastreado; luego 1 % de todo lo rastreado | [revenuecat.com/pricing](https://www.revenuecat.com/pricing) | Sí (resultados de la página oficial) |
 | Supabase Pro | USD 25/mes (incluye 250 GB de salida) | Terceros 2026 | No. Verificar en supabase.com/pricing. |
-| Servidor backend | ~USD 40/mes (supuesto) | Estimación | No (depende del proveedor que elijas). |
-| Tráfico de salida | USD 0.09/GB (supuesto) | Estimación típica de nube | No |
+| Servidor backend en **Fly.io** (1 máquina `shared-cpu-2x`, 1 GB, siempre encendida) | ~USD 6.89/mes | [fly.io/pricing](https://fly.io/pricing) y terceros (precios desde el 1-oct-2026) | Parcial |
+| Tráfico de salida (Fly.io, Norteamérica) | USD 0.02/GB | [fly.io/pricing](https://fly.io/pricing) y terceros | Parcial |
 | Apple Developer Program | USD 99/año | Conocimiento general | Verificar al inscribirte |
 | Google Play Console | USD 25 pago único | Conocimiento general | Verificar al inscribirte |
 
@@ -54,7 +54,7 @@ El caché del prompt puede bajar mucho el costo, pero solo funciona si el prefij
 
 | Opción | Costo traducción/min | Margen Personal con uso completo | Comentario |
 |---|---|---|---|
-| `claude-haiku-5-5` | ~USD 0.001 | **+USD 2.01** (con keyterms) | **Recomendado para el MVP**, si las pruebas de fidelidad (docs/pruebas-dispositivos.md §3) son aceptables. |
+| `claude-haiku-5-5` | ~USD 0.001 | **+USD 2.05** (con keyterms) | **Recomendado para el MVP**, si las pruebas de fidelidad (docs/pruebas-dispositivos.md §3) son aceptables. |
 | `claude-sonnet-5-5` | ~USD 0.009–0.025 | −USD 4.62 (sin caché) | Solo viable con caché efectivo o un precio más alto. |
 | `claude-opus-5-5` | ~USD 0.024–0.055 | **−USD 13.65** | Máxima calidad, pero **inviable** a USD 5.99. |
 | Google NMT (no implementado) | ~USD 0.017 | ~−USD 0.50 | Más caro que Haiku y sin contexto ni reglas de fidelidad. |
@@ -67,7 +67,7 @@ Antes de lanzar, hay que confirmar la calidad con el procedimiento de fidelidad 
 
 ## 5. ¿Cubren costos los planes propuestos?
 
-- **Personal USD 5.99 / 300 min:** sí, **solo con un modelo de traducción económico** (Haiku 5.5). El margen de contribución es de ~USD 2.01 a 4.47 por usuario según el uso (con keyterms). Con la comisión de Apple del 30 % el margen baja a ~USD 1.11.
+- **Personal USD 5.99 / 300 min:** sí, **solo con un modelo de traducción económico** (Haiku 5.5). El margen de contribución es de ~USD 2.05 a 4.48 por usuario según el uso (con keyterms). Con la comisión de Apple del 30 % el margen baja a ~USD 1.15.
 - **Prueba 7 días / 120 min:** con Haiku y keyterms cuesta ~USD 1.23 por prueba con uso completo. Con una conversión del 25 % equivale a ~USD 2.50–5 por cliente que paga. Es aceptable.
 - **Iglesia USD 29.99 / 600 min / 30 asistentes:** margen de ~USD 19 con Haiku y keyterms. No habilitar hasta implementar y medir la fase 2.
 
@@ -93,7 +93,7 @@ Antes de lanzar, hay que confirmar la calidad con el procedimiento de fidelidad 
 - Reembolsos y contracargos. La tienda devuelve el dinero, pero el costo de la API ya se gastó.
 - Fraude.
 - **Impuestos:** las tiendas recaudan el impuesto sobre ventas en EE. UU. en la mayoría de los estados. El impuesto sobre la renta de tu negocio es una partida separada y no se calcula aquí. Consúltalo con un contador.
-- A 1,000 clientes los costos fijos subirán (más servidores y soporte). El modelo los mantiene en ~USD 94 solo como referencia.
+- A 1,000 clientes los costos fijos subirán (más servidores y soporte). El modelo los mantiene en ~USD 61 solo como referencia.
 
 ## 7. Controles de gasto implementados
 

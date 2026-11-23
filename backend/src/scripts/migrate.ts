@@ -2,16 +2,18 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import pg from "pg";
+import { pgConfig } from "../db.js";
 
 /**
  * Aplica db/migrations/*.sql en orden y registra cuáles se aplicaron.
  * Uso: DATABASE_URL=... npm run db:migrate   (añadir --dev-shim solo en local)
  */
 const here = path.dirname(fileURLToPath(import.meta.url));
-const root = path.resolve(here, "../../../db");
+// DB_DIR: carpeta con migrations/ (en la imagen Docker: /app/db). Por defecto, db/ del repositorio.
+const root = process.env.DB_DIR ?? path.resolve(here, "../../../db");
 
 export async function migrate(databaseUrl: string, opts: { devShim?: boolean } = {}): Promise<string[]> {
-  const client = new pg.Client({ connectionString: databaseUrl });
+  const client = new pg.Client(pgConfig(databaseUrl));
   await client.connect();
   const applied: string[] = [];
   try {

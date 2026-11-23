@@ -30,10 +30,10 @@ SUPUESTOS = {
     "google_nmt_usd_per_mchar": 20.0,
     # ── Infraestructura ──
     "audio_mb_per_min": 1.92,       # PCM16 16 kHz mono (subida teléfono→backend→proveedor)
-    "egress_usd_per_gb": 0.09,      # salida backend→Deepgram (supuesto típico de nube)
+    "egress_usd_per_gb": 0.02,      # Fly.io, salida en Norteamérica (backend→Deepgram)
     "fixed_monthly": {
         "Supabase Pro (base de datos + auth)": 25.0,
-        "Servidor backend (1-2 instancias pequeñas)": 40.0,
+        "Fly.io: 1 máquina shared-cpu-2x 1 GB": 6.89,
         "Monitoreo / correo / dominio": 20.0,
         "Cuentas de desarrollador (Apple 99/año + Google 25 único, prorrateado)": 8.25 + 25 / 24,
     },
@@ -100,7 +100,7 @@ def main() -> None:
     p(f"| Deepgram Nova-3 streaming (regular) | {S['stt_usd_min']:.4f} |")
     p(f"| Deepgram Nova-3 streaming (promoción hasta 2026-12-31) | {S['stt_promo_usd_min']:.4f} |")
     p(f"| Keyterms de Deepgram ({'activados' if S['keyterms_enabled'] else 'desactivados'}) | +{S['keyterm_usd_min']:.4f} |")
-    p(f"| Tráfico de salida del audio | {egress_per_min():.4f} |")
+    p(f"| Tráfico de salida del audio (Fly.io) | {egress_per_min():.5f} |")
     for m in S["models"]:
         p(f"| Traducción {m} (sin caché) | {translation_cost_per_min(m, False):.4f} |")
         p(f"| Traducción {m} (con caché del prompt) | {translation_cost_per_min(m, True):.4f} |")

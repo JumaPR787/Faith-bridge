@@ -89,3 +89,19 @@ describe("rutas HTTP", () => {
     expect(r.rows[0].n).toBeGreaterThanOrEqual(1);
   });
 });
+
+describe("purga programada", () => {
+  it("runPurge borra lo vencido y conserva lo vigente", async () => {
+    const { runPurge } = await import("../src/ops/purge.js");
+    const db = testDb();
+    const u = await createUser(db);
+    await db.query(
+      "insert into public.transcripts (user_id, source_lang, expires_at) values ($1,'en', now() - interval '1 day'), ($1,'en', now() + interval '1 day')",
+      [u],
+    );
+    const r = await runPurge(db);
+    expect(r.transcripts).toBeGreaterThanOrEqual(1);
+    const left = await db.query("select count(*)::int as n from public.transcripts where user_id = $1", [u]);
+    expect(left.rows[0].n).toBe(1);
+  });
+});

@@ -1,0 +1,29 @@
+name: Deploy backend (Fly.io)
+
+# Despliegue MANUAL: Actions → «Deploy backend (Fly.io)» → Run workflow.
+# Requiere el secreto del repositorio FLY_API_TOKEN (fly tokens create deploy).
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-fly
+  cancel-in-progress: false
+
+jobs:
+  test:
+    uses: ./.github/workflows/ci.yml
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      # --ha=false: una sola máquina (las sesiones en vivo viven en memoria).
+      - run: flyctl deploy --remote-only --ha=false
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

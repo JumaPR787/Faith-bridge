@@ -62,6 +62,8 @@ const EnvSchema = z.object({
   COST_TRANSLATION_INPUT_USD_PER_MTOK: z.coerce.number().default(0.1),
   COST_TRANSLATION_OUTPUT_USD_PER_MTOK: z.coerce.number().default(0.5),
   ALERT_WEBHOOK_URL: z.string().url().optional(),
+  // Purga de retención programada dentro del servidor (0 = desactivada).
+  PURGE_INTERVAL_HOURS: z.coerce.number().min(0).default(6),
 });
 
 export type Config = z.infer<typeof EnvSchema>;

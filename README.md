@@ -57,6 +57,7 @@ Con `STT_PROVIDER=fake` y `TRANSLATION_PROVIDER=fake` el servidor **simula** la 
 | [docs/costos.md](docs/costos.md) | Tarifas con fuentes y fechas, rentabilidad y controles de gasto |
 | [docs/costos-escenarios.md](docs/costos-escenarios.md) | Escenarios de 10/100/1,000 clientes, pruebas e iglesia (generado) |
 | [docs/instalacion-despliegue.md](docs/instalacion-despliegue.md) | Instalación y despliegue paso a paso |
+| [docs/despliegue-fly.md](docs/despliegue-fly.md) | Despliegue del backend en Fly.io, secretos, dominio, operación y costos |
 | [docs/suscripciones.md](docs/suscripciones.md) | Productos, prueba de 7 días, RevenueCat, casos de sandbox |
 | [docs/publicacion.md](docs/publicacion.md) | Checklist de Google Play y App Store, firma, ficha, declaraciones de datos |
 | [docs/privacidad-proveedores.md](docs/privacidad-proveedores.md) | Qué datos van a cada proveedor y qué se verificó |

@@ -1,12 +1,12 @@
 import pg from "pg";
+import { pgConfig } from "../db.js";
+import { runPurge } from "../ops/purge.js";
 
-/** Tarea programada (diaria): borra transcripciones vencidas según su plazo de retención. */
+/** Ejecución manual de la purga de retención (el servidor ya la programa sola). */
 const url = process.env.DATABASE_URL;
 if (!url) throw new Error("DATABASE_URL is required");
-const client = new pg.Client({ connectionString: url });
+const client = new pg.Client(pgConfig(url));
 await client.connect();
-const r = await client.query<{ n: number }>("select public.purge_expired_transcripts() as n");
-await client.query("delete from public.webhook_events where received_at < now() - interval '90 days'");
-await client.query("delete from public.spend_ledger where day < (now() - interval '400 days')::date");
-console.log(`Purged transcripts: ${r.rows[0]?.n ?? 0}`);
+const r = await runPurge(client);
+console.log(`Purged transcripts: ${r.transcripts}`);
 await client.end();
