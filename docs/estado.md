@@ -41,13 +41,13 @@
 | Base de datos y auth reales | Proyecto de Supabase (y SMTP propio para los códigos) |
 | Suscripciones reales | Cuentas de Apple Developer (USD 99/año) y Google Play (USD 25), productos y RevenueCat |
 | Verificar algunas tarifas | deepgram.com y support.google.com estaban bloqueados desde este entorno; algunas cifras vienen de resultados de búsqueda o de terceros (marcadas en `costos.md`) |
-| Publicar | Prueba cerrada de Google (12 testers × 14 días), TestFlight y revisión |
+| Publicar | Cuenta de organización (entidad legal + D-U-N-S), TestFlight y revisión de las tiendas |
 
 ## ❓ Decisiones que necesito de ti
 
 1. ~~Modelo de traducción~~ → **decidido: `claude-haiku-5-5`** (margen estimado ~USD 2.40 por usuario con uso completo). Pendiente: validar la fidelidad con predicaciones reales (`pruebas-dispositivos.md` §2).
 2. ~~Identificadores~~ → **decidido: `com.faithbridge.app`** en Android e iOS. Pendiente: verificar que la marca «FaithBridge» no infrinja marcas registradas.
-3. **Tipo de cuenta de Google Play:** personal (exige 12 testers × 14 días) u organización (requiere D-U-N-S).
+3. ~~Tipo de cuenta de Google Play~~ → **decidido: organización** (sin el requisito de 12 testers × 14 días). Pendiente: entidad legal, D-U-N-S y verificación (ver `publicacion.md` §4.1).
 4. **Hosting del backend** y dominio (`api.tudominio.com`).
 5. **Autorización** para crear cuentas y gastar en: Supabase Pro, Deepgram, Anthropic, RevenueCat, Apple, Google y SMTP.
 6. ¿Activar los **keyterms** de Deepgram (glosario en el reconocimiento)? Tienen costo extra por minuto; hay que medir si mejoran los resultados.

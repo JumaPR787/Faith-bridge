@@ -61,17 +61,36 @@ Se necesita una Mac con Xcode y una cuenta del Apple Developer Program (USD 99/a
 | Restaurar compras | Apple | ✅ |
 | Texto de uso del micrófono | Apple (`NSMicrophoneUsageDescription`) | ✅ Bilingüe en `Info.plist` |
 | targetSdk ≥ 36 para apps nuevas desde el 31-ago-2026 | [developer.android.com/google/play/requirements/target-sdk](https://developer.android.com/google/play/requirements/target-sdk) | ⚠️ Usa `flutter.targetSdkVersion`. **Verificar** que Flutter 3.50 compile con 36 |
-| Prueba cerrada: **12 testers durante 14 días seguidos** (cuentas personales creadas después del 13-nov-2023) | [support.google.com/…/14151465](https://support.google.com/googleplay/android-developer/answer/14151465) | Pendiente. Si te registras como **organización** (requiere D-U-N-S) no aplica |
+| Prueba cerrada: **12 testers durante 14 días seguidos** (cuentas personales creadas después del 13-nov-2023) | [support.google.com/…/14151465](https://support.google.com/googleplay/android-developer/answer/14151465) | **No aplica:** se usará una cuenta de **organización** (ver §4.1). Se recomienda igualmente una prueba cerrada breve |
 | Formulario de seguridad de datos (Google) y etiquetas de privacidad (Apple) | Ambas tiendas | Borradores en §6 |
 | Acceso para revisores | Ambas | Ver §7 |
 
 ## 4. Guía de pruebas
 
-### Google Play
+### 4.1 Cuenta de Google Play de organización (decidido)
+
+Según la ayuda oficial de Google, el requisito de 12 testers × 14 días es para **cuentas personales** creadas después del 13-nov-2023. Con una cuenta de organización no aplica.
+
+A cambio, Google pide verificar la organización. Requisitos habituales (**verifica los vigentes al registrarte**):
+
+1. **Entidad legal** registrada (por ejemplo, una LLC en tu estado). Debe coincidir exactamente con el nombre del perfil de pagos.
+2. **Número D-U-N-S** de Dun & Bradstreet a nombre de esa entidad. Es gratuito y se solicita en dnb.com. El trámite puede tardar varias semanas, así que **pídelo primero**. El nombre y la dirección deben coincidir con el registro legal.
+3. **Perfil de pagos de Google** de tipo **organización** (no individual), con datos fiscales (EIN) y una cuenta bancaria del negocio.
+4. **Sitio web** de la organización, correo y teléfono de contacto. Google puede pedir verificar el dominio y muestra estos datos en la ficha.
+5. Pago único de registro (USD 25; verificar).
+6. Verificación de identidad de la persona que administra la cuenta.
+
+Consejos:
+
+- Usa el mismo nombre legal en el D-U-N-S, el perfil de pagos, Google Play Console, App Store Connect (Apple también pide D-U-N-S a las organizaciones) y la política de privacidad.
+- El mismo D-U-N-S sirve para registrar la **cuenta de organización de Apple**. Así, en la App Store aparecerá el nombre de la empresa y no tu nombre personal.
+- La verificación puede tardar días; inicia el registro antes de terminar las pruebas técnicas.
+
+### 4.2 Pruebas en Google Play
 
 1. **Prueba interna** (hasta 100 testers, sin revisión larga): sube el AAB y prueba la compra con «testers con licencia» (Configuración → Pruebas de licencias).
-2. **Prueba cerrada:** al menos 12 testers inscritos durante 14 días seguidos. Pídeles que la usen de verdad, porque Google evalúa la participación.
-3. Solicita acceso a producción y responde el cuestionario.
+2. **Prueba cerrada (recomendada, no obligatoria con cuenta de organización):** un grupo pequeño de tu iglesia durante 1–2 semanas, con sesiones reales.
+3. Con cuenta de organización se puede pasar a producción sin el requisito de 12 testers × 14 días. La revisión de la app se mantiene.
 4. Lanzamiento en producción por etapas (por ejemplo, 10 % → 50 % → 100 %).
 
 ### Apple (TestFlight)
@@ -181,7 +200,8 @@ Pantallas a capturar:
 ## 9. Checklist final
 
 - [ ] Identificadores definitivos y nombre verificado
-- [ ] Cuenta de Google Play (USD 25) y Apple Developer (USD 99/año) — **requiere tu autorización**
+- [ ] Entidad legal + número D-U-N-S (gratuito; puede tardar semanas)
+- [ ] Cuenta de Google Play de **organización** (USD 25) y Apple Developer de organización (USD 99/año) — **requiere tu autorización**
 - [ ] Acuerdos de apps de pago, datos bancarios y fiscales (W-9/W-8 según el caso)
 - [ ] Inscripción en el App Store Small Business Program
 - [ ] Productos de suscripción y prueba gratuita en ambas tiendas + RevenueCat
@@ -191,7 +211,7 @@ Pantallas a capturar:
 - [ ] Página web de solicitud de eliminación de cuenta (Google)
 - [ ] Correo de soporte que funcione
 - [ ] Procedimiento de pruebas en dispositivos (`pruebas-dispositivos.md`) superado
-- [ ] Prueba cerrada en Google (12 testers × 14 días) y TestFlight
+- [ ] Prueba cerrada breve en Google (recomendada) y TestFlight
 - [ ] Capturas reales e ícono definitivo (el ícono actual es el predeterminado de Flutter)
 - [ ] Formularios de seguridad de datos y etiquetas de privacidad
 - [ ] Notas y cuenta para revisores
