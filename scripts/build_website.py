@@ -14,6 +14,7 @@ salvo con --allow-draft (añade una franja visible «BORRADOR — no publicar»)
 """
 import argparse
 import html
+import shutil
 import re
 import sys
 from pathlib import Path
@@ -93,13 +94,19 @@ def main() -> int:
         return 1
 
     draft = bool(problems)
-    OUT.mkdir(parents=True, exist_ok=True)
+    if OUT.exists():
+        shutil.rmtree(OUT)  # sin restos de versiones anteriores
+    OUT.mkdir(parents=True)
     for p in PAGES.glob("*.md"):
         title, body = split_front(p.read_text(encoding="utf-8"))
         (OUT / f"{p.stem}.html").write_text(render(title, fill(body), draft), encoding="utf-8")
     for name, text in legal.items():
         title = "Política de privacidad — FaithBridge" if name == "privacidad" else "Términos de uso — FaithBridge"
         (OUT / f"{name}.html").write_text(render(title, fill(text), draft), encoding="utf-8")
+    # Archivos estáticos de Cloudflare Pages (_headers, etc.).
+    for f in (ROOT / "website" / "static").glob("*"):
+        if f.is_file():
+            (OUT / f.name).write_bytes(f.read_bytes())
     print(f"Sitio generado en {OUT} ({'BORRADOR' if draft else 'listo para publicar'})")
     return 0
 

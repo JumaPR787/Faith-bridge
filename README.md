@@ -60,6 +60,7 @@ Con `STT_PROVIDER=fake` y `TRANSLATION_PROVIDER=fake` el servidor **simula** la 
 | [docs/instalacion-despliegue.md](docs/instalacion-despliegue.md) | Instalación y despliegue paso a paso |
 | [docs/cuentas-proveedores.md](docs/cuentas-proveedores.md) | Crear las cuentas de Deepgram, Anthropic y RevenueCat y verificar las claves |
 | [docs/cuentas-tiendas-smtp.md](docs/cuentas-tiendas-smtp.md) | Apple y Google Play (organización), D-U-N-S, dominio, sitio web y SMTP |
+| [docs/sitio-web-cloudflare.md](docs/sitio-web-cloudflare.md) | Sitio web en Cloudflare Pages: cuenta, despliegue, dominio y DNS |
 | [docs/despliegue-fly.md](docs/despliegue-fly.md) | Despliegue del backend en Fly.io, secretos, dominio, operación y costos |
 | [docs/suscripciones.md](docs/suscripciones.md) | Productos, prueba de 7 días, RevenueCat, casos de sandbox |
 | [docs/publicacion.md](docs/publicacion.md) | Checklist de Google Play y App Store, firma, ficha, declaraciones de datos |

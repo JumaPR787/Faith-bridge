@@ -36,7 +36,7 @@ Google también muestra el sitio y el correo en la ficha, y pide una **página w
    ```
    - El script **se niega a generar el sitio** mientras `docs/legal/*.md` tenga campos `[por completar]` o la marca BORRADOR. Así no se publican textos sin revisión legal.
    - Para una vista previa: `--allow-draft`, que muestra una franja roja «BORRADOR — NO PUBLICAR».
-   - Publica `website/public/` en cualquier hosting estático: Cloudflare Pages, Netlify o GitHub Pages, que tienen planes gratuitos (verificar). Elegir el hosting es tu decisión.
+   - **Alojamiento: Cloudflare Pages** (decidido; plan gratuito). Ver [`sitio-web-cloudflare.md`](sitio-web-cloudflare.md).
    - URL a usar en la app y en las tiendas: `https://tudominio.com/privacidad.html`, `/terminos.html` y `/eliminar-cuenta.html`.
 
 ## 2. D-U-N-S

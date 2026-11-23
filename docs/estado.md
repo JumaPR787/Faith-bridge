@@ -26,7 +26,7 @@
 - **No se ejecutó la app en ningún teléfono ni emulador.** El permiso de micrófono, la captura PCM, la pantalla encendida, el lector de pantalla, la batería y la latencia están **sin medir**.
 - **Compras:** no se probaron en sandbox de las tiendas (no hay cuentas).
 - **Ícono, pantalla de inicio y capturas** definitivos.
-- **Sitio web** (`website/`, generado con `scripts/build_website.py`): incluye la página de eliminación de cuenta que pide Google. Falta publicarlo, y antes hace falta la revisión legal de la política y los términos; el script no genera el sitio final mientras sigan siendo borradores.
+- **Sitio web** (`website/`, generado con `scripts/build_website.py`): incluye la página de eliminación de cuenta que pide Google. Se alojará en **Cloudflare Pages** (decidido; despliegue manual con GitHub Actions; ver `sitio-web-cloudflare.md`). Falta crear la cuenta y publicarlo, y antes hace falta la revisión legal de la política y los términos: el script no genera el sitio final mientras sigan siendo borradores.
 - **Varias instancias del backend:** las sesiones viven en memoria; para escalar hace falta afinidad por sesión o un bus compartido.
 - **Modo iglesia:** solo están la estructura de datos, las reglas de acceso y el diseño. Faltan rutas, QR, oyentes y plan.
 - Textos localizados de `InfoPlist.strings` (hoy el texto del micrófono es bilingüe en un solo texto).
