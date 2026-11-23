@@ -1,0 +1,37 @@
+{
+  "name": "faithbridge-backend",
+  "version": "0.1.0",
+  "description": "FaithBridge backend: auth, quotas, live STT/translation orchestration, subscriptions",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "dev": "tsx watch src/server.ts",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "db:migrate": "tsx src/scripts/migrate.ts",
+    "db:purge": "tsx src/scripts/purge.ts"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.12.0",
+    "@fastify/websocket": "^11.3.7",
+    "fastify": "^5.12.8",
+    "jose": "^6.2.18",
+    "pg": "^8.23.1",
+    "ws": "^8.23.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/pg": "^8.23.1",
+    "@types/ws": "^8.18.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.1"
+  },
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  }
+}
