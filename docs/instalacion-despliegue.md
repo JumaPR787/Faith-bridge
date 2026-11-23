@@ -98,6 +98,7 @@ flutter build appbundle --release \
   --dart-define=REVENUECAT_GOOGLE_KEY=goog_... \
   --dart-define=REVENUECAT_APPLE_KEY=appl_... \
   --dart-define=REVENUECAT_CHURCH_OFFERING=church \
+  --dart-define=APP_LINK_HOST=tudominio.com \
   --dart-define=PRIVACY_URL=https://tudominio.com/privacidad \
   --dart-define=TERMS_URL=https://tudominio.com/terminos \
   --dart-define=SUPPORT_EMAIL=soporte@tudominio.com

@@ -7,11 +7,19 @@ import 'core/theme.dart';
 import 'data/account_controller.dart';
 import 'data/settings_controller.dart';
 import 'features/auth/sign_in_screen.dart';
+import 'features/church/deep_links.dart';
 import 'features/home/home_screen.dart';
 import 'features/onboarding/welcome_screen.dart';
 
-class FaithBridgeApp extends StatelessWidget {
+class FaithBridgeApp extends StatefulWidget {
   const FaithBridgeApp({super.key});
+
+  @override
+  State<FaithBridgeApp> createState() => _FaithBridgeAppState();
+}
+
+class _FaithBridgeAppState extends State<FaithBridgeApp> {
+  final _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +34,8 @@ class FaithBridgeApp extends StatelessWidget {
       home = const HomeScreen();
     }
     return MaterialApp(
+      navigatorKey: _navigatorKey,
+      builder: (context, child) => DeepLinkListener(navigatorKey: _navigatorKey, child: child ?? const SizedBox.shrink()),
       title: 'FaithBridge',
       debugShowCheckedModeBanner: false,
       locale: Locale(settings.uiLocale),

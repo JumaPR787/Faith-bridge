@@ -6,7 +6,7 @@ App para Android e iPhone que **muestra por escrito lo que se dice en un servici
 
 ## Estado en una línea
 
-El **MVP del modo personal y el modo iglesia (apagado por ahora) están implementados y probados con proveedores simulados**: 72 pruebas del backend y 21 de la app pasan, y el análisis estático está limpio. **Aún no se ha probado con servicios reales ni en teléfonos**, y nada se ha publicado. Detalle completo: [`docs/estado.md`](docs/estado.md).
+El **MVP del modo personal y el modo iglesia (apagado por ahora) están implementados y probados con proveedores simulados**: 74 pruebas del backend y 24 de la app pasan, y el análisis estático está limpio. **Aún no se ha probado con servicios reales ni en teléfonos**, y nada se ha publicado. Detalle completo: [`docs/estado.md`](docs/estado.md).
 
 ## Estructura
 
@@ -61,6 +61,7 @@ Con `STT_PROVIDER=fake` y `TRANSLATION_PROVIDER=fake` el servidor **simula** la 
 | [docs/cuentas-proveedores.md](docs/cuentas-proveedores.md) | Crear las cuentas de Deepgram, Anthropic y RevenueCat y verificar las claves |
 | [docs/cuentas-tiendas-smtp.md](docs/cuentas-tiendas-smtp.md) | Apple y Google Play (organización), D-U-N-S, dominio, sitio web y SMTP |
 | [docs/sitio-web-cloudflare.md](docs/sitio-web-cloudflare.md) | Sitio web en Cloudflare Pages: cuenta, despliegue, dominio y DNS |
+| [docs/enlaces-universales.md](docs/enlaces-universales.md) | QR que abre la app: dominio, archivos de verificación y pruebas |
 | [docs/despliegue-fly.md](docs/despliegue-fly.md) | Despliegue del backend en Fly.io, secretos, dominio, operación y costos |
 | [docs/suscripciones.md](docs/suscripciones.md) | Productos, prueba de 7 días, RevenueCat, casos de sandbox |
 | [docs/publicacion.md](docs/publicacion.md) | Checklist de Google Play y App Store, firma, ficha, declaraciones de datos |

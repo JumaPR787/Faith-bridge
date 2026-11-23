@@ -3,7 +3,8 @@ name: Deploy website (Cloudflare Pages)
 # Despliegue MANUAL: Actions → «Deploy website (Cloudflare Pages)» → Run workflow.
 # Secretos del repositorio: CLOUDFLARE_API_TOKEN (permiso «Cloudflare Pages: Edit»),
 #                           CLOUDFLARE_ACCOUNT_ID.
-# Variables del repositorio: COMPANY_NAME, SUPPORT_EMAIL, DELETION_DAYS, BACKUP_DAYS.
+# Variables del repositorio: COMPANY_NAME, SUPPORT_EMAIL, DELETION_DAYS, BACKUP_DAYS,
+#   APPLE_TEAM_ID, ANDROID_CERT_SHA256 (huellas separadas por comas), APP_STORE_URL, PLAY_STORE_URL.
 on:
   workflow_dispatch:
 
@@ -31,6 +32,10 @@ jobs:
           --support-email "${{ vars.SUPPORT_EMAIL }}"
           --deletion-days "${{ vars.DELETION_DAYS || '30' }}"
           --backup-days "${{ vars.BACKUP_DAYS || '30' }}"
+          --apple-team-id "${{ vars.APPLE_TEAM_ID }}"
+          --android-sha256 "${{ vars.ANDROID_CERT_SHA256 }}"
+          --app-store-url "${{ vars.APP_STORE_URL }}"
+          --play-store-url "${{ vars.PLAY_STORE_URL }}"
       - uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}

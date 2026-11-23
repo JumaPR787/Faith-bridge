@@ -1,1 +1,4 @@
 #include "Generated.xcconfig"
+
+// Dominio de los enlaces universales (QR del modo iglesia). CAMBIAR. Ver docs/enlaces-universales.md
+APP_LINK_HOST=CAMBIAR.example.com

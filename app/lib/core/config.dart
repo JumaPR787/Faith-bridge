@@ -12,6 +12,9 @@ class AppConfig {
   static const revenueCatChurchOffering = String.fromEnvironment('REVENUECAT_CHURCH_OFFERING', defaultValue: 'church');
   static const privacyPolicyUrl = String.fromEnvironment('PRIVACY_URL', defaultValue: 'https://example.com/faithbridge/privacy');
   static const termsUrl = String.fromEnvironment('TERMS_URL', defaultValue: 'https://example.com/faithbridge/terms');
+  /// Dominio de los enlaces universales (p. ej. tudominio.com). Debe coincidir con
+  /// la configuración nativa (Android: faithbridge.appLinkHost; iOS: APP_LINK_HOST).
+  static const appLinkHost = String.fromEnvironment('APP_LINK_HOST');
   static const supportEmail = String.fromEnvironment('SUPPORT_EMAIL', defaultValue: 'support@example.com');
 
   static bool get isProduction => env == 'production';

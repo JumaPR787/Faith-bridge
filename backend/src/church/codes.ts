@@ -11,9 +11,15 @@ export function generateJoinCode(): string {
   return `${c.slice(0, 4)}-${c.slice(4)}`;
 }
 
-/** Acepta minúsculas, espacios, guiones y el prefijo del QR («FAITHBRIDGE:»). */
+/**
+ * Acepta minúsculas, espacios, guiones, el prefijo «FAITHBRIDGE:» y enlaces
+ * universales (https://dominio/j/ABCD2345 o …?code=ABCD-2345).
+ */
 export function normalizeJoinCode(input: string): string | null {
-  const raw = input.trim().toUpperCase().replace(/^FAITHBRIDGE:/, "").replace(/[\s-]/g, "");
+  let text = input.trim();
+  const fromLink = /\/j\/([A-Za-z0-9-]{8,9})\/?(?:[?#].*)?$/.exec(text) ?? /[?&]code=([A-Za-z0-9-]{8,9})/.exec(text);
+  if (fromLink?.[1]) text = fromLink[1];
+  const raw = text.toUpperCase().replace(/^FAITHBRIDGE:/, "").replace(/[\s-]/g, "");
   if (raw.length !== CODE_LENGTH) return null;
   for (const ch of raw) if (!ALPHABET.includes(ch)) return null;
   return raw;
@@ -24,7 +30,11 @@ export function hashJoinCode(normalized: string): string {
   return createHash("sha256").update(`faithbridge-join:${normalized}`).digest("hex");
 }
 
-/** Contenido del QR que muestra el organizador. */
-export function qrPayload(code: string): string {
+/**
+ * Contenido del QR. Con dominio configurado es un enlace universal: la cámara
+ * del teléfono abre la app (o la página web si no está instalada).
+ */
+export function qrPayload(code: string, linkBase?: string): string {
+  if (linkBase) return `${linkBase.replace(/\/+$/, "")}/${code.replace("-", "")}`;
   return `FAITHBRIDGE:${code}`;
 }

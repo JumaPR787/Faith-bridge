@@ -7,17 +7,32 @@ import '../../data/api_client.dart';
 import '../common.dart';
 import 'listener_screen.dart';
 
-/// Normaliza lo escrito o escaneado: acepta minúsculas, espacios, guiones y
-/// el prefijo del QR («FAITHBRIDGE:»). Devuelve XXXX-XXXX o null.
+/// Normaliza lo escrito o escaneado: acepta minúsculas, espacios, guiones,
+/// el prefijo «FAITHBRIDGE:» y enlaces (https://dominio/j/ABCD2345).
+/// Devuelve XXXX-XXXX o null.
 String? normalizeJoinCode(String input) {
-  final raw = input.trim().toUpperCase().replaceFirst(RegExp(r'^FAITHBRIDGE:'), '').replaceAll(RegExp(r'[\s-]'), '');
+  var text = input.trim();
+  final m = RegExp(r'/j/([A-Za-z0-9-]{8,9})/?(?:[?#].*)?$').firstMatch(text) ?? RegExp(r'[?&]code=([A-Za-z0-9-]{8,9})').firstMatch(text);
+  if (m != null) text = m.group(1)!;
+  final raw = text.toUpperCase().replaceFirst(RegExp(r'^FAITHBRIDGE:'), '').replaceAll(RegExp(r'[\s-]'), '');
   if (!RegExp(r'^[ABCDEFGHJKMNPQRSTUVWXYZ23456789]{8}$').hasMatch(raw)) return null;
   return '${raw.substring(0, 4)}-${raw.substring(4)}';
 }
 
 /// Unirse como asistente con código o QR. No requiere cuenta ni micrófono.
+/// Código de un enlace universal recibido por la app. Solo se aceptan enlaces
+/// https del dominio configurado, con la ruta `/j/CODIGO`.
+String? joinCodeFromUri(Uri uri, String expectedHost) {
+  if (expectedHost.isEmpty || uri.scheme != 'https' || uri.host.toLowerCase() != expectedHost.toLowerCase()) return null;
+  if (uri.pathSegments.length != 2 || uri.pathSegments.first != 'j') return null;
+  return normalizeJoinCode(uri.pathSegments[1]);
+}
+
 class JoinScreen extends StatefulWidget {
-  const JoinScreen({super.key});
+  const JoinScreen({super.key, this.initialCode});
+
+  /// Código recibido por un enlace universal: se intenta unir automáticamente.
+  final String? initialCode;
   @override
   State<JoinScreen> createState() => _JoinScreenState();
 }
@@ -26,6 +41,18 @@ class _JoinScreenState extends State<JoinScreen> {
   final _code = TextEditingController();
   bool _busy = false;
   String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    final code = widget.initialCode;
+    if (code != null) {
+      _code.text = code;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _join(code);
+      });
+    }
+  }
 
   @override
   void dispose() {

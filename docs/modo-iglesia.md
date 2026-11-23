@@ -73,6 +73,6 @@ El organizador envía **una** fuente de audio autorizada (la mezcla del predicad
 ### Limitaciones conocidas
 
 - **Una sola instancia del backend:** las transmisiones viven en memoria, igual que las sesiones personales.
-- **El QR solo funciona dentro de la app.** La cámara nativa del teléfono no abre la app (no hay enlaces universales; pendiente).
+- **Enlaces universales implementados:** con `JOIN_LINK_BASE` y tu dominio configurado, la cámara nativa abre la app. Ver [`enlaces-universales.md`](enlaces-universales.md); falta configurar el dominio y probarlo en teléfonos.
 - Los asistentes necesitan internet; el uso de datos es bajo (~3 KB por minuto de texto).
 - Si el servidor se reinicia (por ejemplo, al desplegar), la transmisión se corta y el organizador debe volver a iniciarla.

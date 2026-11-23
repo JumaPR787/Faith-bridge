@@ -186,7 +186,8 @@ export function registerChurchRoutes(app: FastifyInstance, ctx: AppContext): voi
       if (!r.rows[0]) continue;
       await ctx.db.query("update public.organizations set audio_authorization_attested_at = now() where id = $1", [id.data]);
       // El código en claro SOLO se devuelve aquí (se guarda únicamente su hash).
-      return reply.code(201).send({ id: r.rows[0].id, code, qr: qrPayload(code), joinExpiresAt: r.rows[0].join_expires_at, maxListeners });
+      const qr = qrPayload(code, ctx.cfg.JOIN_LINK_BASE);
+      return reply.code(201).send({ id: r.rows[0].id, code, qr, link: qr.startsWith("https://") ? qr : null, joinExpiresAt: r.rows[0].join_expires_at, maxListeners });
     }
     return reply.code(500).send({ error: "internal" });
   });

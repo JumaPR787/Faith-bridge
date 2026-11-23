@@ -27,6 +27,8 @@ kill_timeout = "30s"             # tiempo para cerrar sesiones en vivo y guardar
   TRANSLATION_MODEL = "claude-haiku-5-5"
   SANDBOX_PURCHASES = "allow"
   PURGE_INTERVAL_HOURS = "6"
+  # Enlaces universales del QR (modo iglesia). Descomenta con tu dominio real:
+  # JOIN_LINK_BASE = "https://tudominio.com/j"
 
 [http_service]
   internal_port = 8080

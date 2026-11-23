@@ -7,13 +7,21 @@ Uso:
   python3 scripts/build_website.py --company "Tu Empresa LLC" --support-email soporte@tudominio.com \
       --deletion-days 30 --backup-days 30
 
-Páginas: inicio, privacidad, términos, eliminar cuenta, soporte.
+Páginas: inicio, privacidad, términos, eliminar cuenta, soporte y la página de
+respaldo de los enlaces /j/CODIGO (si la app no está instalada).
+
+Enlaces universales (QR del modo iglesia que abre la app):
+  --apple-team-id ABCDE12345           → .well-known/apple-app-site-association
+  --android-sha256 AA:BB:...  (repetible: certificado de firma de Play y el de subida)
+                                       → .well-known/assetlinks.json
+  --app-store-url / --play-store-url   → enlaces de descarga en la página /j/
 Las páginas legales salen de docs/legal/*.md. Si todavía contienen campos
 [entre corchetes] o la marca BORRADOR, el script se NIEGA a generar el sitio,
 salvo con --allow-draft (añade una franja visible «BORRADOR — no publicar»).
 """
 import argparse
 import html
+import json
 import shutil
 import re
 import sys
@@ -64,10 +72,26 @@ def main() -> int:
     ap.add_argument("--deletion-days", default="30")
     ap.add_argument("--backup-days", default="30")
     ap.add_argument("--allow-draft", action="store_true")
+    ap.add_argument("--apple-team-id", default="")
+    ap.add_argument("--android-sha256", action="append", default=[])
+    ap.add_argument("--app-id", default="com.faithbridge.app", help="Bundle ID de iOS y applicationId de Android")
+    ap.add_argument("--app-store-url", default="")
+    ap.add_argument("--play-store-url", default="")
     a = ap.parse_args()
 
+    def store_links(lang: str) -> str:
+        links = []
+        if a.app_store_url:
+            links.append(f"[App Store]({a.app_store_url})")
+        if a.play_store_url:
+            links.append(f"[Google Play]({a.play_store_url})")
+        if links:
+            return " · ".join(links)
+        return "pronto en App Store y Google Play." if lang == "es" else "coming soon to the App Store and Google Play."
+
     subs = {"{{COMPANY}}": a.company, "{{SUPPORT_EMAIL}}": a.support_email,
-            "{{DELETION_DAYS}}": a.deletion_days, "{{BACKUP_DAYS}}": a.backup_days}
+            "{{DELETION_DAYS}}": a.deletion_days, "{{BACKUP_DAYS}}": a.backup_days,
+            "{{STORE_LINKS_ES}}": store_links("es"), "{{STORE_LINKS_EN}}": store_links("en")}
 
     def fill(t: str) -> str:
         for k, v in subs.items():
@@ -107,6 +131,31 @@ def main() -> int:
     for f in (ROOT / "website" / "static").glob("*"):
         if f.is_file():
             (OUT / f.name).write_bytes(f.read_bytes())
+    # Verificación de dominio para que el QR abra la app.
+    wk = OUT / ".well-known"
+    if a.apple_team_id:
+        if not re.fullmatch(r"[A-Z0-9]{10}", a.apple_team_id):
+            print("--apple-team-id debe tener 10 caracteres (A-Z, 0-9).", file=sys.stderr)
+            return 1
+        wk.mkdir(exist_ok=True)
+        aasa = {"applinks": {"details": [{"appIDs": [f"{a.apple_team_id}.{a.app_id}"],
+                                          "components": [{"/": "/j/*", "comment": "Unirse a una sesión de iglesia"}]}]}}
+        (wk / "apple-app-site-association").write_text(json.dumps(aasa, indent=2), encoding="utf-8")
+    else:
+        print("Aviso: sin --apple-team-id no se genera apple-app-site-association (el QR no abrirá la app en iPhone).", file=sys.stderr)
+    fps = [f.strip().upper() for arg in a.android_sha256 for f in arg.split(",") if f.strip()]
+    if fps:
+        bad = [f for f in fps if not re.fullmatch(r"([0-9A-F]{2}:){31}[0-9A-F]{2}", f)]
+        if bad:
+            print(f"Huella SHA-256 inválida: {bad}", file=sys.stderr)
+            return 1
+        wk.mkdir(exist_ok=True)
+        links = [{"relation": ["delegate_permission/common.handle_all_urls"],
+                  "target": {"namespace": "android_app", "package_name": a.app_id, "sha256_cert_fingerprints": fps}}]
+        (wk / "assetlinks.json").write_text(json.dumps(links, indent=2), encoding="utf-8")
+    else:
+        print("Aviso: sin --android-sha256 no se genera assetlinks.json (el QR no abrirá la app en Android).", file=sys.stderr)
+
     print(f"Sitio generado en {OUT} ({'BORRADOR' if draft else 'listo para publicar'})")
     return 0
 

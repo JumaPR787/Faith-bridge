@@ -212,6 +212,7 @@ Pantallas a capturar:
 - [ ] Correo de soporte que funcione
 - [ ] Procedimiento de pruebas en dispositivos (`pruebas-dispositivos.md`) superado
 - [ ] Prueba cerrada breve en Google (recomendada) y TestFlight
+- [ ] Enlaces universales: dominio en 4 lugares + Team ID + huella SHA-256 (`enlaces-universales.md`)
 - [ ] Capturas reales e ícono definitivo (el ícono actual es el predeterminado de Flutter)
 - [ ] Formularios de seguridad de datos y etiquetas de privacidad
 - [ ] Notas y cuenta para revisores

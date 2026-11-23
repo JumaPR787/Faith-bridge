@@ -37,6 +37,7 @@ El sitio no tiene JavaScript, cookies, analítica ni formularios. Por eso no hac
      - `COMPANY_NAME` (nombre legal exacto, igual que en el D-U-N-S);
      - `SUPPORT_EMAIL` (por ejemplo `soporte@tudominio.com`);
      - `DELETION_DAYS` y `BACKUP_DAYS` (los plazos reales que confirme Supabase; 30 por defecto).
+   - Para que el QR abra la app: `APPLE_TEAM_ID`, `ANDROID_CERT_SHA256`, `APP_STORE_URL`, `PLAY_STORE_URL` (ver [`enlaces-universales.md`](enlaces-universales.md)).
 4. Opcional: *Settings → Environments → `production`* con aprobación manual. El mismo entorno protege el despliegue del backend.
 
 ## 4. Publicar

@@ -214,3 +214,18 @@ describe("modo iglesia", () => {
     expect(t.rows[0].org_id).toBe(o.orgId);
   });
 });
+
+import { qrPayload } from "../src/church/codes.js";
+
+describe("enlaces universales del QR", () => {
+  it("con dominio configurado, el QR es un enlace https corto", () => {
+    expect(qrPayload("ABCD-2345", "https://faithbridge.example/j/")).toBe("https://faithbridge.example/j/ABCD2345");
+    expect(qrPayload("ABCD-2345")).toBe("FAITHBRIDGE:ABCD-2345");
+  });
+  it("el código se extrae de enlaces, prefijos y texto escrito", () => {
+    for (const v of ["https://faithbridge.example/j/ABCD2345", "https://faithbridge.example/j/abcd-2345/", "https://x.example/join?code=ABCD-2345", "FAITHBRIDGE:ABCD-2345", " abcd 2345 "]) {
+      expect(normalizeJoinCode(v), v).toBe("ABCD2345");
+    }
+    expect(normalizeJoinCode("https://faithbridge.example/otra/ruta")).toBeNull();
+  });
+});

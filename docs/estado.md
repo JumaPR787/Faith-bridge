@@ -6,7 +6,7 @@
 
 | Área | Qué | Cómo se verificó |
 |---|---|---|
-| Backend | Servidor Node 22/TypeScript: autenticación con JWT de Supabase, WebSocket en vivo, segmentación provisional/confirmada con `seq` y tiempos, traducción una vez por segmento con contexto limitado, glosario cristiano y libros bíblicos (solo nombres), marcado `[?]`, defensa contra inyección en el prompt | `tsc` sin errores; **72 pruebas automáticas pasan** (`npm test`) |
+| Backend | Servidor Node 22/TypeScript: autenticación con JWT de Supabase, WebSocket en vivo, segmentación provisional/confirmada con `seq` y tiempos, traducción una vez por segmento con contexto limitado, glosario cristiano y libros bíblicos (solo nombres), marcado `[?]`, defensa contra inyección en el prompt | `tsc` sin errores; **74 pruebas automáticas pasan** (`npm test`) |
 | Backend | Cuotas en servidor (un minuto cuenta una vez), prueba de 120 min / plan de 300 min, segunda prueba sin minutos, fin de sesión al agotar sin cargos | Pruebas `live.test.ts` y `billing.test.ts` |
 | Backend | Webhook de RevenueCat autenticado e idempotente con reintento; estados trial/active/cancelada/billing_issue/gracia/vencida/reembolsada; transferencias; sincronización tras compra | Pruebas con RevenueCat **simulado** |
 | Backend | Reconexión del proveedor de voz con límite de intentos; reanudación del cliente con reenvío de lo faltante; periodo de gracia; pausa sin cobro; una sesión activa por usuario | Pruebas de integración por WebSocket real |
@@ -14,7 +14,7 @@
 | Backend | Rechazo de arranque en producción con proveedores simulados o configuración insegura | Ejecutado manualmente |
 | Backend | Prueba de humo del servidor compilado contra PostgreSQL: sesión completa por WebSocket con transcripción guardada | Ejecutado manualmente (proveedores simulados) |
 | Base de datos | Migraciones con RLS: aislamiento por usuario y por organización, tablas operativas inaccesibles, sin listado público, purga por retención | Aplicadas en PostgreSQL 16; pruebas `rls.test.ts` |
-| App Flutter | Bienvenida, privacidad y permisos, inicio de sesión por código, inicio (modos), preparación de sesión, subtítulos en vivo, historial, detalle, traducción de texto con estimación previa, planes y prueba, suscripción, ajustes (letra, contraste, tema, pantalla encendida, retención, glosario), ayuda, eliminación de cuenta; modo iglesia (organizador y asistentes; se muestra «próximamente» mientras el servidor lo tenga apagado) | `flutter analyze`: **sin problemas**; **21 pruebas pasan** (`flutter test`), incluida una prueba de interfaz del recorrido en vivo |
+| App Flutter | Bienvenida, privacidad y permisos, inicio de sesión por código, inicio (modos), preparación de sesión, subtítulos en vivo, historial, detalle, traducción de texto con estimación previa, planes y prueba, suscripción, ajustes (letra, contraste, tema, pantalla encendida, retención, glosario), ayuda, eliminación de cuenta; modo iglesia (organizador y asistentes; se muestra «próximamente» mientras el servidor lo tenga apagado) | `flutter analyze`: **sin problemas**; **24 pruebas pasan** (`flutter test`), incluida una prueba de interfaz del recorrido en vivo |
 | App | Micrófono solo con acción explícita; indicador visible; pausa en segundo plano y ante interrupciones; búfer de audio acotado a 5 s; reanudación de sesión | Pruebas de widget y de conexión con canal simulado |
 | Docs | Arquitectura, costos con fuentes, escenarios generados, instalación/despliegue, suscripciones/sandbox, publicación, privacidad de proveedores, borradores legales, pruebas en dispositivos, limitaciones del micrófono, investigación del modo iglesia | — |
 
@@ -32,6 +32,12 @@
   Lo cubren **9 pruebas de integración**.
 - **App:** menú del modo iglesia, «Unirme con código» (también sin cuenta, desde el inicio de sesión), escáner de QR, vista del asistente, «Mis iglesias», sesiones con QR, miembros, uso y transmisión con el número de asistentes. Lo cubren **4 pruebas**.
 - **Sigue apagado** (`church_mode_enabled=false`), como pediste: hasta validar el MVP. Ver `modo-iglesia.md` → «Para habilitarlo».
+
+## ✅ Enlaces universales del QR
+
+- El QR puede ser un enlace `https://tudominio.com/j/CODIGO` que abre la app con la cámara nativa. Si no está instalada, muestra una página con instrucciones.
+- Configuración nativa (Android App Links, iOS Associated Domains), archivos de verificación generados por el sitio y validación estricta del dominio en la app. Lo cubren 5 pruebas.
+- **Pendiente:** poner tu dominio real en 4 lugares, el Team ID de Apple y la huella SHA-256 de Android, y probar en teléfonos (`enlaces-universales.md`).
 
 ## ⏳ Pendiente (no se pudo o no correspondía hacerlo aún)
 

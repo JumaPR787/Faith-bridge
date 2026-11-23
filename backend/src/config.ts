@@ -64,6 +64,8 @@ const EnvSchema = z.object({
   ALERT_WEBHOOK_URL: z.string().url().optional(),
   // Modo iglesia (fase 2). Se habilita además con app_config.church_mode_enabled.
   LISTENER_TOKEN_SECRET: z.string().min(32).optional(),
+  // Base de los enlaces universales para unirse (p. ej. https://tudominio.com/j). Sin ella, el QR usa «FAITHBRIDGE:».
+  JOIN_LINK_BASE: z.string().url().optional(),
   CHURCH_MAX_LISTENERS: z.coerce.number().int().min(1).max(500).default(30),
   CHURCH_JOIN_HOURS: z.coerce.number().int().min(1).max(24).default(6),
   JOIN_ATTEMPTS_PER_MINUTE: z.coerce.number().int().min(1).default(10),

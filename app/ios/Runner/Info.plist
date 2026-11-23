@@ -25,6 +25,8 @@
 	<string>FaithBridge usa el micrófono solo cuando tocas «Iniciar», para convertir lo que se dice en texto. / FaithBridge uses the microphone only when you tap “Start” to turn speech into text.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>FaithBridge usa la cámara solo para leer el código QR de la sesión de tu iglesia. / FaithBridge uses the camera only to read your church session’s QR code.</string>
+	<key>FlutterDeepLinkingEnabled</key>
+	<false/>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>CFBundlePackageType</key>
