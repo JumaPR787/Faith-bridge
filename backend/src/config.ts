@@ -31,8 +31,8 @@ const EnvSchema = z.object({
   DEEPGRAM_KEYTERMS_ENABLED: boolFromString.default(false),
   TRANSLATION_PROVIDER: z.enum(["anthropic", "fake"]).default("anthropic"),
   ANTHROPIC_API_KEY: z.string().optional(),
-  // Modelo de traducción: DECISIÓN PENDIENTE del dueño del producto (ver docs/costos.md).
-  TRANSLATION_MODEL: z.string().default("claude-opus-5-5"),
+  // Modelo de traducción elegido por el dueño del producto (ver docs/costos.md §4).
+  TRANSLATION_MODEL: z.string().default("claude-haiku-5-5"),
   TRANSLATION_TIMEOUT_MS: z.coerce.number().int().default(15000),
   TRANSLATION_CONTEXT_SEGMENTS: z.coerce.number().int().min(0).max(6).default(3),
 
@@ -58,8 +58,8 @@ const EnvSchema = z.object({
 
   // Tarifas usadas para estimar gasto (USD). Actualizar al cambiar contratos.
   COST_STT_USD_PER_MIN: z.coerce.number().default(0.0077),
-  COST_TRANSLATION_INPUT_USD_PER_MTOK: z.coerce.number().default(4),
-  COST_TRANSLATION_OUTPUT_USD_PER_MTOK: z.coerce.number().default(20),
+  COST_TRANSLATION_INPUT_USD_PER_MTOK: z.coerce.number().default(0.1),
+  COST_TRANSLATION_OUTPUT_USD_PER_MTOK: z.coerce.number().default(0.5),
   ALERT_WEBHOOK_URL: z.string().url().optional(),
 });
 

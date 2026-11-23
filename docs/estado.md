@@ -45,7 +45,7 @@
 
 ## ❓ Decisiones que necesito de ti
 
-1. **Modelo de traducción** (`TRANSLATION_MODEL`). Con `claude-opus-5-5`, el valor por defecto actual, el plan de USD 5.99 **pierde** ~USD 13.65 por usuario con uso completo. Con `claude-haiku-5-5` **gana** ~USD 2.40. Recomiendo probar Haiku 5.5 con el procedimiento de fidelidad y decidir con datos. Ver `costos.md` §4.
+1. ~~Modelo de traducción~~ → **decidido: `claude-haiku-5-5`** (margen estimado ~USD 2.40 por usuario con uso completo). Pendiente: validar la fidelidad con predicaciones reales (`pruebas-dispositivos.md` §2).
 2. **Identificadores definitivos** (`com.faithbridge.app` es provisional) y la verificación de la marca «FaithBridge».
 3. **Tipo de cuenta de Google Play:** personal (exige 12 testers × 14 días) u organización (requiere D-U-N-S).
 4. **Hosting del backend** y dominio (`api.tudominio.com`).

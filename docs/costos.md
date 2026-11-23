@@ -50,7 +50,7 @@ Se midió el prompt real que usa el backend (`buildSystemPrompt`):
 
 El caché del prompt puede bajar mucho el costo, pero solo funciona si el prefijo supera el mínimo cacheable del modelo. **Se calculó sin caché (escenario conservador)** y se muestra también la cifra con caché. Hay que medirlo (campo `cache_read_input_tokens` en la respuesta).
 
-## 4. ⚠️ Decisión pendiente: modelo de traducción
+## 4. Modelo de traducción — decidido: `claude-haiku-5-5`
 
 | Opción | Costo traducción/min | Margen Personal con uso completo | Comentario |
 |---|---|---|---|
@@ -59,7 +59,11 @@ El caché del prompt puede bajar mucho el costo, pero solo funciona si el prefij
 | `claude-opus-5-5` | ~USD 0.024–0.055 | **−USD 13.65** | Máxima calidad, pero **inviable** a USD 5.99. |
 | Google NMT (no implementado) | ~USD 0.017 | ~−USD 0.50 | Más caro que Haiku y sin contexto ni reglas de fidelidad. |
 
-El código usa la variable `TRANSLATION_MODEL`. El valor por defecto es `claude-opus-5-5`, que es el modelo predeterminado recomendado por Anthropic. **No lo cambié por mi cuenta, porque elegir un modelo más barato es tu decisión.** Si apruebas Haiku 5.5, basta con poner `TRANSLATION_MODEL=claude-haiku-5-5` y `COST_TRANSLATION_INPUT_USD_PER_MTOK=0.10` y `COST_TRANSLATION_OUTPUT_USD_PER_MTOK=0.50` en el servidor.
+**Decisión del dueño del producto (23-nov-2026): se usa `claude-haiku-5-5`.** Ya es el valor por defecto de `TRANSLATION_MODEL`, y las tarifas para estimar gasto (`COST_TRANSLATION_INPUT_USD_PER_MTOK=0.10`, `COST_TRANSLATION_OUTPUT_USD_PER_MTOK=0.50`) también están ajustadas.
+
+Con Haiku 5.5 el backend desactiva el razonamiento interno y usa esfuerzo bajo. Haiku 5.5 no tiene respaldo automático en el servidor ante un rechazo: si ocurre, ese segmento se marca «[traducción no disponible]» y nunca se inventa.
+
+Antes de lanzar, hay que confirmar la calidad con el procedimiento de fidelidad (`pruebas-dispositivos.md` §2). Si no fuera aceptable, el cambio es una sola variable, pero las tablas de §5 muestran el impacto en el margen.
 
 ## 5. ¿Cubren costos los planes propuestos?
 
