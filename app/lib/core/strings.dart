@@ -188,6 +188,23 @@ const Map<String, List<String>> kStrings = {
     'Cancela cuando quieras desde la tienda: iPhone → Ajustes → tu nombre → Suscripciones. Android → Google Play → Pagos y suscripciones → Suscripciones.',
     'Cancel anytime from the store: iPhone → Settings → your name → Subscriptions. Android → Google Play → Payments & subscriptions → Subscriptions.'
   ],
+  'plan_church': ['Plan Iglesia', 'Church Plan'],
+  'plan_church_features': [
+    '600 minutos de transmisión por periodo mensual · hasta 30 asistentes simultáneos que reciben el texto sin usar su micrófono · un idioma de traducción por sesión · los minutos no se multiplican por asistentes · incluye el uso personal',
+    '600 streaming minutes per monthly period · up to 30 simultaneous attendees who get the text without using their microphone · one translation language per session · minutes are not multiplied by attendees · includes personal use'
+  ],
+  'plan_church_who': ['Para quien organiza en la iglesia. Los asistentes no necesitan plan ni cuenta.', 'For the church organizer. Attendees need no plan or account.'],
+  'church_upgrade_note': [
+    'Al cambiar del plan Personal al plan Iglesia, la tienda ajusta el cobro del periodo actual (prorrateo) y el plan Personal deja de renovarse. Los 600 minutos empiezan con el nuevo plan.',
+    'When switching from Personal to Church, the store adjusts the charge for the current period (proration) and the Personal plan stops renewing. The 600 minutes start with the new plan.'
+  ],
+  'church_includes_personal': ['Tu plan Iglesia ya incluye el uso personal.', 'Your Church plan already includes personal use.'],
+  'current_plan': ['Plan actual', 'Current plan'],
+  'upgrade_to_church': ['Cambiar al plan Iglesia', 'Switch to the Church plan'],
+  'plan_name_personal': ['Personal', 'Personal'],
+  'plan_name_church': ['Iglesia', 'Church'],
+  'plan_name_none': ['Sin plan', 'No plan'],
+  'plan': ['Plan', 'Plan'],
   'subscribe': ['Suscribirme', 'Subscribe'],
   'start_trial': ['Comenzar prueba', 'Start trial'],
   'restore': ['Restaurar compras', 'Restore purchases'],

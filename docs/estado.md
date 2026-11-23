@@ -14,7 +14,7 @@
 | Backend | Rechazo de arranque en producción con proveedores simulados o configuración insegura | Ejecutado manualmente |
 | Backend | Prueba de humo del servidor compilado contra PostgreSQL: sesión completa por WebSocket con transcripción guardada | Ejecutado manualmente (proveedores simulados) |
 | Base de datos | Migraciones con RLS: aislamiento por usuario y por organización, tablas operativas inaccesibles, sin listado público, purga por retención | Aplicadas en PostgreSQL 16; pruebas `rls.test.ts` |
-| App Flutter | Bienvenida, privacidad y permisos, inicio de sesión por código, inicio (modos), preparación de sesión, subtítulos en vivo, historial, detalle, traducción de texto con estimación previa, planes y prueba, suscripción, ajustes (letra, contraste, tema, pantalla encendida, retención, glosario), ayuda, eliminación de cuenta; modo iglesia (organizador y asistentes; se muestra «próximamente» mientras el servidor lo tenga apagado) | `flutter analyze`: **sin problemas**; **17 pruebas pasan** (`flutter test`), incluida una prueba de interfaz del recorrido en vivo |
+| App Flutter | Bienvenida, privacidad y permisos, inicio de sesión por código, inicio (modos), preparación de sesión, subtítulos en vivo, historial, detalle, traducción de texto con estimación previa, planes y prueba, suscripción, ajustes (letra, contraste, tema, pantalla encendida, retención, glosario), ayuda, eliminación de cuenta; modo iglesia (organizador y asistentes; se muestra «próximamente» mientras el servidor lo tenga apagado) | `flutter analyze`: **sin problemas**; **21 pruebas pasan** (`flutter test`), incluida una prueba de interfaz del recorrido en vivo |
 | App | Micrófono solo con acción explícita; indicador visible; pausa en segundo plano y ante interrupciones; búfer de audio acotado a 5 s; reanudación de sesión | Pruebas de widget y de conexión con canal simulado |
 | Docs | Arquitectura, costos con fuentes, escenarios generados, instalación/despliegue, suscripciones/sandbox, publicación, privacidad de proveedores, borradores legales, pruebas en dispositivos, limitaciones del micrófono, investigación del modo iglesia | — |
 
@@ -35,7 +35,7 @@
 
 ## ⏳ Pendiente (no se pudo o no correspondía hacerlo aún)
 
-- **Plan Iglesia en las tiendas** (`fb_church_monthly`, entitlement `church`) y su opción en la pantalla «Planes».
+- **Plan Iglesia en las tiendas** (`fb_church_monthly`, entitlement y offering `church`). La pantalla «Planes» ya lo ofrece (solo con el modo iglesia activado), incluido el cambio Personal → Iglesia como mejora de plan; falta crear los productos y probarlo en sandbox (`suscripciones.md` §4, casos 13–16).
 - Pruebas del modo iglesia en el lugar, con la consola real y varios teléfonos.
 
 - **Nada se probó con Deepgram, Anthropic, Supabase ni RevenueCat reales.** Todo el recorrido se probó con proveedores **simulados** (claramente marcados `[SIMULATED]` / `[SIM→xx]`, con un aviso en la app).

@@ -50,23 +50,29 @@ Reglas adicionales:
 
 1. Crea la app con el Bundle ID definitivo `com.faithbridge.app`.
 2. Firma el acuerdo **Paid Apps Agreement** y completa los datos bancarios y fiscales.
-3. Ve a **Monetización → Suscripciones → Grupo** «FaithBridge Personal» → producto `fb_personal_monthly`, duración 1 mes, precio USD 5.99. La tienda genera los precios locales.
+3. Ve a **Monetización → Suscripciones → Grupo** «FaithBridge» → producto `fb_personal_monthly`, duración 1 mes, precio USD 5.99. La tienda genera los precios locales.
 4. **Oferta introductoria:** «Gratis», duración 1 semana, para nuevos suscriptores.
 5. Añade nombre y descripción localizados (es/en) y la captura de revisión.
 6. Inscríbete en el **App Store Small Business Program** para pagar el 15 % de comisión.
+7. **Plan Iglesia** (cuando se habilite el modo iglesia): en el **mismo grupo** «FaithBridge», crea el producto `fb_church_monthly`, 1 mes, USD 29.99, **sin** oferta introductoria. Ordena los niveles del grupo con **Iglesia en el nivel superior** y Personal debajo. Así, pasar de Personal a Iglesia es una **mejora**: Apple la aplica de inmediato y reembolsa en proporción lo no usado del plan anterior. Nunca quedan dos suscripciones activas.
 
 ### Google Play Console
 
 1. Crea la app con el applicationId `com.faithbridge.app`.
 2. Ve a **Monetizar → Suscripciones** → `fb_personal_monthly` → plan base mensual de renovación automática, USD 5.99.
 3. **Oferta:** prueba gratuita de 7 días, elegibilidad «Adquisición de clientes nuevos».
-4. Configura la cuenta de servicio para RevenueCat (Play Developer API) y las notificaciones en tiempo real (Pub/Sub), siguiendo la guía de RevenueCat.
+4. **Plan Iglesia:** suscripción `fb_church_monthly`, plan base mensual con renovación automática, USD 29.99, sin oferta de prueba. El cambio desde Personal lo pide la app como **cambio de plan con cobro prorrateado** (`CHARGE_PRORATED_PRICE`): Google reemplaza la suscripción Personal, no la duplica.
+5. Configura la cuenta de servicio para RevenueCat (Play Developer API) y las notificaciones en tiempo real (Pub/Sub), siguiendo la guía de RevenueCat.
 
 ### RevenueCat
 
 1. Crea un proyecto y conecta las apps de iOS y Android (credenciales de cada tienda).
-2. **Entitlement:** `personal`. Más adelante, `church`.
-3. **Offering:** `default`, con el paquete `$rc_monthly` asociado a `fb_personal_monthly` en ambas tiendas.
+2. **Entitlements:**
+   - `personal` ← `fb_personal_monthly`;
+   - `church` ← `fb_church_monthly`. El backend da prioridad al plan Iglesia, que incluye el uso personal (600 minutos).
+3. **Offerings:**
+   - `default`: paquete `$rc_monthly` → `fb_personal_monthly` (iOS y Android);
+   - `church`: paquete `$rc_monthly` → `fb_church_monthly`. El nombre se puede cambiar con `--dart-define=REVENUECAT_CHURCH_OFFERING=...`.
 4. **Integraciones → Webhooks:**
    - URL: `https://api.tudominio.com/webhooks/revenuecat`;
    - Authorization: el valor de `REVENUECAT_WEBHOOK_AUTH`.
@@ -88,5 +94,9 @@ Reglas adicionales:
 | 10 | Restaurar | Reinstalar → Restaurar compras | Acceso recuperado |
 | 11 | Otro dispositivo | Misma cuenta de FaithBridge en otro teléfono | Mismo beneficio y misma cuota |
 | 12 | Webhook duplicado | Reenviar un evento desde RevenueCat | `duplicate: true`, sin cambios |
+| 13 | Plan Iglesia oculto | Modo iglesia apagado → Planes | Solo aparece el plan Personal |
+| 14 | Personal → Iglesia | Con Personal activo: «Cambiar al plan Iglesia» | Una sola suscripción activa (Iglesia); cobro prorrateado; `plan=church` con 600 min en un periodo nuevo |
+| 15 | Iglesia sin plan previo | Usuario sin plan → Suscribirme (Iglesia) | Precio de la tienda; sin oferta gratuita; `plan=church` |
+| 16 | Iglesia → Personal | Desde la tienda (Administrar suscripción) | Al final del periodo: `plan=personal`, 300 min |
 
 Las pruebas automáticas (`backend/test/billing.test.ts`) ya cubren los casos 2, 4, 5, 7, 8, 11 y 12, la transferencia y el anti-abuso, con un RevenueCat simulado. **Las tiendas reales no se han probado.**

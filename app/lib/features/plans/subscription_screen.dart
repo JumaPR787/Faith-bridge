@@ -23,6 +23,7 @@ class SubscriptionScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
+            ListTile(title: Text(s.t('plan')), subtitle: Text(s.t('plan_name_${q.hasAccess ? q.plan : 'none'}'))),
             ListTile(title: Text(s.t('status')), subtitle: Text(s.t('status_${q.status}'))),
             ListTile(title: Text(s.t('minutes_used')), subtitle: Text('${formatMinutes(q.usedSeconds)} / ${q.quotaSeconds ~/ 60} min')),
             ListTile(title: Text(s.t('minutes_left')), subtitle: Text(formatMinutes(q.remainingSeconds))),

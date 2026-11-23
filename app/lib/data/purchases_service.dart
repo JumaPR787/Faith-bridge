@@ -46,10 +46,15 @@ class PurchasesService {
     }
   }
 
-  Future<PlanOffer?> personalOffer() async {
+  Future<PlanOffer?> personalOffer() => _offer(AppConfig.revenueCatOffering, fallbackToCurrent: true);
+
+  /// Plan Iglesia: offering propia en RevenueCat (entitlement `church`).
+  Future<PlanOffer?> churchOffer() => _offer(AppConfig.revenueCatChurchOffering, fallbackToCurrent: false);
+
+  Future<PlanOffer?> _offer(String offeringId, {required bool fallbackToCurrent}) async {
     if (!_configured) return null;
     final offerings = await Purchases.getOfferings();
-    final offering = offerings.all[AppConfig.revenueCatOffering] ?? offerings.current;
+    final offering = offerings.all[offeringId] ?? (fallbackToCurrent ? offerings.current : null);
     final pkg = offering?.monthly ?? offering?.availablePackages.firstOrNull;
     if (pkg == null) return null;
     final product = pkg.storeProduct;
@@ -65,9 +70,23 @@ class PurchasesService {
     return PlanOffer(package: pkg, priceString: product.priceString, trialEligible: eligible, productId: product.identifier);
   }
 
-  Future<PurchaseOutcome> buy(PlanOffer offer) async {
+  /// Suscripciones activas según la tienda (ids de producto).
+  Future<List<String>> activeProductIds() async {
+    if (!_configured) return const [];
+    return (await Purchases.getCustomerInfo()).activeSubscriptions;
+  }
+
+  /// [replacingProductId]: suscripción actual que se reemplaza (p. ej. Personal → Iglesia).
+  /// En Android se indica a Google Play como cambio de plan con cobro prorrateado,
+  /// para que no queden dos suscripciones activas. En iOS, si ambos productos
+  /// están en el mismo grupo de suscripción, StoreKit hace el cambio solo.
+  Future<PurchaseOutcome> buy(PlanOffer offer, {String? replacingProductId}) async {
     try {
-      await Purchases.purchase(PurchaseParams.package(offer.package));
+      final change = (replacingProductId != null && Platform.isAndroid && replacingProductId != offer.productId)
+          // En Android RevenueCat informa «producto:planbase»; Google pide solo el producto.
+          ? StoreProductChangeInfo(replacingProductId.split(':').first, replacementMode: StoreReplacementMode.chargeProratedPrice)
+          : null;
+      await Purchases.purchase(PurchaseParams.package(offer.package, productChangeInfo: change));
       return PurchaseOutcome.success;
     } on PlatformException catch (e) {
       final code = PurchasesErrorHelper.getErrorCode(e);

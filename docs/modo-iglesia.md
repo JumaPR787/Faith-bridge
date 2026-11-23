@@ -66,7 +66,7 @@ El organizador envía **una** fuente de audio autorizada (la mezcla del predicad
 
 1. Validar el MVP personal con servicios reales.
 2. Probar en el lugar con la consola y la interfaz de audio de la iglesia (tabla de arriba) y hacer una sesión de 90 minutos con varios oyentes.
-3. Crear el producto `fb_church_monthly` (USD 29.99) en ambas tiendas, asociado al entitlement `church` en RevenueCat, y agregarlo a la pantalla de planes. **Pendiente:** la app aún no muestra el plan Iglesia en «Planes».
+3. Crear el producto `fb_church_monthly` (USD 29.99) en ambas tiendas, asociado al entitlement `church` y a la offering `church` en RevenueCat (ver `suscripciones.md` §3). La pantalla «Planes» ya lo muestra **solo cuando el modo iglesia está activado**, con el cambio Personal → Iglesia como mejora de plan (sin duplicar suscripciones).
 4. Verificar que `LISTENER_TOKEN_SECRET` esté configurado (Fly secrets).
 5. `update public.app_config set value = 'true' where key = 'church_mode_enabled';`
 

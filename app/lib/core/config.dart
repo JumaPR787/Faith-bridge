@@ -9,6 +9,7 @@ class AppConfig {
   static const revenueCatAppleKey = String.fromEnvironment('REVENUECAT_APPLE_KEY');
   static const revenueCatGoogleKey = String.fromEnvironment('REVENUECAT_GOOGLE_KEY');
   static const revenueCatOffering = String.fromEnvironment('REVENUECAT_OFFERING', defaultValue: 'default');
+  static const revenueCatChurchOffering = String.fromEnvironment('REVENUECAT_CHURCH_OFFERING', defaultValue: 'church');
   static const privacyPolicyUrl = String.fromEnvironment('PRIVACY_URL', defaultValue: 'https://example.com/faithbridge/privacy');
   static const termsUrl = String.fromEnvironment('TERMS_URL', defaultValue: 'https://example.com/faithbridge/terms');
   static const supportEmail = String.fromEnvironment('SUPPORT_EMAIL', defaultValue: 'support@example.com');
