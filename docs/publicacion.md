@@ -56,7 +56,7 @@ Se necesita una Mac con Xcode y una cuenta del Apple Developer Program (USD 99/a
 | Requisito | Fuente | Estado en la app |
 |---|---|---|
 | Eliminación de cuenta dentro de la app (Apple 5.1.1(v)) y aviso de que la suscripción sigue cobrándose por la tienda | [developer.apple.com — account deletion](https://developer.apple.com/support/offering-account-deletion-in-your-app) | ✅ Ajustes → Eliminar cuenta. Advierte que hay que cancelar en la tienda y ofrece el botón «Administrar en la tienda» |
-| Google: eliminación de cuenta dentro de la app **y** desde un enlace web | Política de datos de usuario de Google Play | ⚠️ Dentro de la app ✅. **Falta una página web** de solicitud de eliminación (por ejemplo, un formulario o correo a soporte) |
+| Google: eliminación de cuenta dentro de la app **y** desde un enlace web | Política de datos de usuario de Google Play | Dentro de la app ✅. Página web lista en `website/pages/eliminar-cuenta.md` (falta publicarla en tu dominio) |
 | Precio, duración, renovación automática, enlaces a términos y privacidad en la pantalla de compra (Apple 3.1.2) | App Review Guidelines (verificar el texto vigente) | ✅ Pantalla Planes. ⚠️ Apple exige un enlace a los Términos (EULA) también en la ficha |
 | Restaurar compras | Apple | ✅ |
 | Texto de uso del micrófono | Apple (`NSMicrophoneUsageDescription`) | ✅ Bilingüe en `Info.plist` |
@@ -208,7 +208,7 @@ Pantallas a capturar:
 - [ ] Backend desplegado con HTTPS, migraciones aplicadas y webhook configurado
 - [ ] `TRANSLATION_MODEL` decidido y costos medidos
 - [ ] Política de privacidad y términos revisados por un abogado y publicados en una URL pública
-- [ ] Página web de solicitud de eliminación de cuenta (Google)
+- [ ] Sitio web publicado (`website/`), con la página de eliminación de cuenta (Google)
 - [ ] Correo de soporte que funcione
 - [ ] Procedimiento de pruebas en dispositivos (`pruebas-dispositivos.md`) superado
 - [ ] Prueba cerrada breve en Google (recomendada) y TestFlight

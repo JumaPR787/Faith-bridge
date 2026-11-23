@@ -26,7 +26,7 @@
 - **No se ejecutó la app en ningún teléfono ni emulador.** El permiso de micrófono, la captura PCM, la pantalla encendida, el lector de pantalla, la batería y la latencia están **sin medir**.
 - **Compras:** no se probaron en sandbox de las tiendas (no hay cuentas).
 - **Ícono, pantalla de inicio y capturas** definitivos.
-- **Página web** de eliminación de cuenta (requisito de Google) y publicación de la política y los términos.
+- **Sitio web** (`website/`, generado con `scripts/build_website.py`): incluye la página de eliminación de cuenta que pide Google. Falta publicarlo, y antes hace falta la revisión legal de la política y los términos; el script no genera el sitio final mientras sigan siendo borradores.
 - **Varias instancias del backend:** las sesiones viven en memoria; para escalar hace falta afinidad por sesión o un bus compartido.
 - **Modo iglesia:** solo están la estructura de datos, las reglas de acceso y el diseño. Faltan rutas, QR, oyentes y plan.
 - Textos localizados de `InfoPlist.strings` (hoy el texto del micrófono es bilingüe en un solo texto).
@@ -49,6 +49,6 @@
 2. ~~Identificadores~~ → **decidido: `com.faithbridge.app`** en Android e iOS. Pendiente: verificar que la marca «FaithBridge» no infrinja marcas registradas.
 3. ~~Tipo de cuenta de Google Play~~ → **decidido: organización** (sin el requisito de 12 testers × 14 días). Pendiente: entidad legal, D-U-N-S y verificación (ver `publicacion.md` §4.1).
 4. ~~Hosting del backend~~ → **decidido: Fly.io** (ver `despliegue-fly.md`). Cuentas de Fly.io y Supabase **autorizadas**; debes crearlas tú (correo, términos y tarjeta). Luego ejecuta `scripts/fly-setup.sh` (ver `despliegue-fly.md` §1.1). Pendiente: dominio propio (`api.tudominio.com`).
-5. **Cuentas autorizadas:** Fly.io, Supabase, Deepgram, Anthropic y RevenueCat. Las creas tú; guía en `cuentas-proveedores.md` y verificación con `npm run check:providers`. **Pendientes de autorización:** Apple Developer y Google Play (de organización) y un SMTP para los códigos de inicio de sesión.
+5. **Cuentas autorizadas:** Fly.io, Supabase, Deepgram, Anthropic y RevenueCat. Las creas tú; guía en `cuentas-proveedores.md` y verificación con `npm run check:providers`. **También autorizadas:** Apple Developer y Google Play (de organización) y SMTP (recomendado: Resend). Guía en `cuentas-tiendas-smtp.md`. Requieren antes: LLC + EIN, dominio con correo de trabajo, sitio web (`website/`) y D-U-N-S.
 6. ~~Keyterms de Deepgram~~ → **activados** (glosario en el reconocimiento, con respaldo automático si Deepgram los rechaza). Pendiente: confirmar el precio y medir la mejora en el reconocimiento.
 7. ~~Plan de texto~~ → **decidido: 1 minuto por cada 1,000 caracteres** (redondeo hacia arriba; se muestra y se confirma antes de procesar).
