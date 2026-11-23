@@ -58,7 +58,7 @@ El script:
 - carga los secretos sin mostrarlos (`fly secrets import`);
 - despliega con una sola máquina y comprueba `/healthz`.
 
-Si `REVENUECAT_WEBHOOK_AUTH` está vacío, lo genera. Para desplegar necesitas también las claves de Deepgram, Anthropic y RevenueCat; sin ellas, el servidor se niega a arrancar en producción.
+Si `REVENUECAT_WEBHOOK_AUTH` está vacío, lo genera. Para desplegar necesitas también las claves de Deepgram, Anthropic y RevenueCat (ver `cuentas-proveedores.md`); sin ellas, el servidor se niega a arrancar en producción. **Antes de desplegar, verifica las claves:** `cd backend && npm run check:providers -- .env.production`.
 
 ## 2. Instalar flyctl y crear la app
 

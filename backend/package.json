@@ -9,7 +9,8 @@
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "db:migrate": "tsx src/scripts/migrate.ts",
-    "db:purge": "tsx src/scripts/purge.ts"
+    "db:purge": "tsx src/scripts/purge.ts",
+    "check:providers": "tsx src/scripts/check-providers.ts"
   },
   "license": "ISC",
   "dependencies": {

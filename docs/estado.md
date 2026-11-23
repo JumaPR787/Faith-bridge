@@ -49,6 +49,6 @@
 2. ~~Identificadores~~ → **decidido: `com.faithbridge.app`** en Android e iOS. Pendiente: verificar que la marca «FaithBridge» no infrinja marcas registradas.
 3. ~~Tipo de cuenta de Google Play~~ → **decidido: organización** (sin el requisito de 12 testers × 14 días). Pendiente: entidad legal, D-U-N-S y verificación (ver `publicacion.md` §4.1).
 4. ~~Hosting del backend~~ → **decidido: Fly.io** (ver `despliegue-fly.md`). Cuentas de Fly.io y Supabase **autorizadas**; debes crearlas tú (correo, términos y tarjeta). Luego ejecuta `scripts/fly-setup.sh` (ver `despliegue-fly.md` §1.1). Pendiente: dominio propio (`api.tudominio.com`).
-5. **Autorización** para crear cuentas y gastar en: Supabase Pro, Deepgram, Anthropic, RevenueCat, Apple, Google y SMTP.
+5. **Cuentas autorizadas:** Fly.io, Supabase, Deepgram, Anthropic y RevenueCat. Las creas tú; guía en `cuentas-proveedores.md` y verificación con `npm run check:providers`. **Pendientes de autorización:** Apple Developer y Google Play (de organización) y un SMTP para los códigos de inicio de sesión.
 6. ~~Keyterms de Deepgram~~ → **activados** (glosario en el reconocimiento, con respaldo automático si Deepgram los rechaza). Pendiente: confirmar el precio y medir la mejora en el reconocimiento.
 7. ~~Plan de texto~~ → **decidido: 1 minuto por cada 1,000 caracteres** (redondeo hacia arriba; se muestra y se confirma antes de procesar).
