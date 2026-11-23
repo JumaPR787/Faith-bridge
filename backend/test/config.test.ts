@@ -7,5 +7,7 @@ describe("configuración", () => {
     expect(cfg.TRANSLATION_MODEL).toBe("claude-haiku-5-5");
     expect(cfg.COST_TRANSLATION_INPUT_USD_PER_MTOK).toBe(0.1);
     expect(cfg.COST_TRANSLATION_OUTPUT_USD_PER_MTOK).toBe(0.5);
+    expect(cfg.DEEPGRAM_KEYTERMS_ENABLED).toBe(true);
+    expect(cfg.COST_STT_USD_PER_MIN).toBeCloseTo(0.009);
   });
 });

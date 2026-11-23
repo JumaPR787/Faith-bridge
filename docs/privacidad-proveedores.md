@@ -7,7 +7,7 @@
 
 | Dato | Desde | Hacia | Para qué | ¿Se guarda? |
 |---|---|---|---|---|
-| Audio del micrófono (PCM) | Teléfono | Backend FaithBridge → **Deepgram** | Convertir voz en texto | **Backend: no** (solo cuenta los bytes). Deepgram: ver abajo |
+| Audio del micrófono (PCM) y términos del glosario (keyterms) | Teléfono | Backend FaithBridge → **Deepgram** | Convertir voz en texto (los términos mejoran el reconocimiento de palabras cristianas) | **Backend: no** (solo cuenta los bytes). Deepgram: ver abajo |
 | Texto transcrito (segmentos + 3 de contexto) | Backend | **Anthropic** (API de Claude) | Traducir | Backend: solo si el usuario activa «Guardar». Anthropic: ver abajo |
 | Correo, id de usuario | Teléfono | **Supabase** (Auth + PostgreSQL) | Cuenta | Sí, hasta eliminar la cuenta |
 | Transcripciones guardadas, glosario | Backend | Supabase | Historial | Sí, hasta borrarlas o hasta que venza el plazo de retención (365 días por defecto) |

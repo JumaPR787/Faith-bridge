@@ -1,6 +1,24 @@
 import WebSocket from "ws";
 import type { SttProvider, SttStream, SttStreamHandlers, SttStreamOptions, SttResult } from "./types.js";
 
+/** Límite prudente: Deepgram admite ~500 tokens de keyterms (~100 palabras). */
+export const MAX_KEYTERMS = 50;
+export const MAX_KEYTERM_CHARS = 1200;
+
+/** Recorta la lista de keyterms para no superar el límite del proveedor. */
+export function limitKeyterms(terms: string[]): string[] {
+  const out: string[] = [];
+  let chars = 0;
+  for (const t of terms) {
+    const k = t.trim();
+    if (!k || out.includes(k)) continue;
+    if (out.length >= MAX_KEYTERMS || chars + k.length > MAX_KEYTERM_CHARS) break;
+    out.push(k);
+    chars += k.length;
+  }
+  return out;
+}
+
 /**
  * Adaptador de Deepgram (streaming por WebSocket).
  * Documentación: https://developers.deepgram.com/docs/live-streaming-audio
@@ -10,6 +28,10 @@ import type { SttProvider, SttStream, SttStreamHandlers, SttStreamOptions, SttRe
  * - mip_opt_out=true: excluye las solicitudes del programa de mejora de
  *   modelos de Deepgram (no retención para entrenamiento). Verificar en el
  *   contrato vigente antes de publicar (ver docs/privacidad-proveedores.md).
+ * - Keyterms (glosario cristiano): mejoran el reconocimiento de términos como
+ *   «Espíritu Santo» o «resurrection». Tienen costo adicional por minuto. Si
+ *   Deepgram rechaza la conexión con keyterms (HTTP 400), se reintenta sin
+ *   ellos para que la sesión no falle.
  */
 export class DeepgramProvider implements SttProvider {
   readonly name = "deepgram";
@@ -18,9 +40,10 @@ export class DeepgramProvider implements SttProvider {
     private readonly model: string,
     private readonly keytermsEnabled: boolean,
     private readonly baseUrl = "wss://api.deepgram.com/v1/listen",
+    private readonly onWarn: (msg: string) => void = () => undefined,
   ) {}
 
-  buildUrl(opts: SttStreamOptions): string {
+  buildUrl(opts: SttStreamOptions, withKeyterms = this.keytermsEnabled): string {
     const p = new URLSearchParams({
       model: this.model,
       language: opts.language,
@@ -35,15 +58,28 @@ export class DeepgramProvider implements SttProvider {
       vad_events: "false",
       mip_opt_out: "true",
     });
-    if (this.keytermsEnabled) {
-      for (const k of opts.keyterms.slice(0, 50)) p.append("keyterm", k);
+    if (withKeyterms) {
+      for (const k of limitKeyterms(opts.keyterms)) p.append("keyterm", k);
     }
     return `${this.baseUrl}?${p.toString()}`;
   }
 
-  open(opts: SttStreamOptions, h: SttStreamHandlers): Promise<SttStream> {
+  async open(opts: SttStreamOptions, h: SttStreamHandlers): Promise<SttStream> {
+    const useKeyterms = this.keytermsEnabled && opts.keyterms.length > 0;
+    try {
+      return await this.connect(this.buildUrl(opts, useKeyterms), h);
+    } catch (err) {
+      if (useKeyterms && err instanceof Error && err.message === "deepgram_http_400") {
+        this.onWarn("deepgram rejected keyterms; retrying without keyterms");
+        return this.connect(this.buildUrl(opts, false), h);
+      }
+      throw err;
+    }
+  }
+
+  private connect(url: string, h: SttStreamHandlers): Promise<SttStream> {
     return new Promise((resolve, reject) => {
-      const ws = new WebSocket(this.buildUrl(opts), {
+      const ws = new WebSocket(url, {
         headers: { Authorization: `Token ${this.apiKey}` },
         handshakeTimeout: 10_000,
       });
@@ -95,6 +131,8 @@ export class DeepgramProvider implements SttProvider {
       });
       ws.on("unexpected-response", (_req, res) => {
         const err = new Error(`deepgram_http_${res.statusCode}`);
+        res.resume();
+        ws.terminate();
         if (!opened) reject(err);
         else h.onError(err);
       });

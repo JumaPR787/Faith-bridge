@@ -142,7 +142,8 @@ export function handleLiveSocket(ctx: AppContext, socket: WebSocket): void {
       );
       transcriptId = t.rows[0]!.id;
     }
-    const glossary = m.targetLang ? await loadGlossary(ctx.db, user.id, m.sourceLang, m.targetLang) : [];
+    // El glosario sirve para traducir y, en el idioma hablado, como keyterms del STT.
+    const glossary = await loadGlossary(ctx.db, user.id, m.sourceLang, m.targetLang ?? (m.sourceLang === "en" ? "es" : "en"));
 
     const s = new LiveSession(
       { db: ctx.db, cfg: ctx.cfg, stt: ctx.stt, translator: m.targetLang ? ctx.translator : null, quota: ctx.quota, guard: ctx.guard, log: ctx.log },

@@ -16,6 +16,7 @@
 
 - **WER** (tasa de error de palabras) = (sustituciones + omisiones + inserciones) / palabras de referencia. Usa una herramienta como `jiwer` sobre el texto guardado (activa «Guardar transcripción»).
 - Lleva una lista aparte de **nombres propios y referencias bíblicas**: ¿se reconoció «Juan 3:16», «Habacuc», «Nicodemo»?
+- **Keyterms:** repite 3 fragmentos con `DEEPGRAM_KEYTERMS_ENABLED=true` y `false`. Compara el acierto en términos del glosario (gracia, salvación, discipulado, Espíritu Santo, apóstol, resurrección) y el costo. Si no hay mejora clara, desactívalos.
 - Cuenta las palabras marcadas `[?]`: deben aparecer donde el audio es realmente dudoso, no sustituir palabras claras.
 
 ## 2. Fidelidad de traducción (medir aparte de la transcripción)

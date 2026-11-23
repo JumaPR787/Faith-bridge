@@ -18,7 +18,9 @@ const db = createDb(cfg.DATABASE_URL);
 
 const stt =
   cfg.STT_PROVIDER === "deepgram"
-    ? new DeepgramProvider(required(cfg.DEEPGRAM_API_KEY, "DEEPGRAM_API_KEY"), cfg.DEEPGRAM_MODEL, cfg.DEEPGRAM_KEYTERMS_ENABLED)
+    ? new DeepgramProvider(required(cfg.DEEPGRAM_API_KEY, "DEEPGRAM_API_KEY"), cfg.DEEPGRAM_MODEL, cfg.DEEPGRAM_KEYTERMS_ENABLED, undefined, (msg) =>
+        app.log.warn(msg),
+      )
     : new FakeSttProvider();
 const translator =
   cfg.TRANSLATION_PROVIDER === "anthropic"

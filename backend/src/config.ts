@@ -28,7 +28,7 @@ const EnvSchema = z.object({
   STT_PROVIDER: z.enum(["deepgram", "fake"]).default("deepgram"),
   DEEPGRAM_API_KEY: z.string().optional(),
   DEEPGRAM_MODEL: z.string().default("nova-3"),
-  DEEPGRAM_KEYTERMS_ENABLED: boolFromString.default(false),
+  DEEPGRAM_KEYTERMS_ENABLED: boolFromString.default(true),
   TRANSLATION_PROVIDER: z.enum(["anthropic", "fake"]).default("anthropic"),
   ANTHROPIC_API_KEY: z.string().optional(),
   // Modelo de traducción elegido por el dueño del producto (ver docs/costos.md §4).
@@ -57,7 +57,8 @@ const EnvSchema = z.object({
   PAUSE_IDLE_CLOSE_SECONDS: z.coerce.number().int().default(600),
 
   // Tarifas usadas para estimar gasto (USD). Actualizar al cambiar contratos.
-  COST_STT_USD_PER_MIN: z.coerce.number().default(0.0077),
+  // Nova-3 streaming (0.0077) + keyterms (0.0013, cifra de terceros sin verificar).
+  COST_STT_USD_PER_MIN: z.coerce.number().default(0.009),
   COST_TRANSLATION_INPUT_USD_PER_MTOK: z.coerce.number().default(0.1),
   COST_TRANSLATION_OUTPUT_USD_PER_MTOK: z.coerce.number().default(0.5),
   ALERT_WEBHOOK_URL: z.string().url().optional(),

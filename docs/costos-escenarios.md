@@ -8,7 +8,7 @@
 |---|---|
 | Deepgram Nova-3 streaming (regular) | 0.0077 |
 | Deepgram Nova-3 streaming (promoción hasta 2026-12-31) | 0.0048 |
-| Keyterms de Deepgram (opcional, desactivado) | +0.0013 |
+| Keyterms de Deepgram (activados) | +0.0013 |
 | Tráfico de salida del audio | 0.0002 |
 | Traducción claude-opus-5-5 (sin caché) | 0.0546 |
 | Traducción claude-opus-5-5 (con caché del prompt) | 0.0240 |
@@ -26,9 +26,9 @@ Precio $5.99; ingreso neto tras tienda 15 %: $5.09.
 
 | Modelo | Uso 60 min (bajo) | Uso 150 min (medio) | Uso 300 min (completo) | Margen de contribución con uso completo |
 |---|---|---|---|---|
-| claude-opus-5-5 | $3.75 | $9.37 | $18.74 | -$13.65 |
-| claude-sonnet-5-5 | $1.94 | $4.86 | $9.71 | -$4.62 |
-| claude-haiku-5-5 | $0.54 | $1.35 | $2.69 | $2.40 |
+| claude-opus-5-5 | $3.83 | $9.57 | $19.13 | -$14.04 |
+| claude-sonnet-5-5 | $2.02 | $5.05 | $10.10 | -$5.01 |
+| claude-haiku-5-5 | $0.62 | $1.54 | $3.08 | $2.01 |
 
 ## 3. Escenarios mensuales — traducción con `claude-haiku-5-5` (sin caché, conservador)
 
@@ -36,15 +36,15 @@ Supuestos: 80 % de los minutos con traducción; nuevas pruebas cada mes = 30 % d
 
 | Clientes de pago | Uso | Ingresos brutos | Comisión tienda (15 %) | RevenueCat | Costo variable (uso) | Costo de pruebas | Margen de contribución | Costos fijos | Resultado neto (antes de impuestos) |
 |---|---|---|---|---|---|---|---|---|---|
-| 10 | bajo 60 | $59.90 | $8.99 | $0.00 | $5.25 | $6.30 | $39.36 | $94.29 | -$54.93 |
-| 10 | medio 150 | $59.90 | $8.99 | $0.00 | $13.13 | $6.30 | $31.49 | $94.29 | -$62.80 |
-| 10 | completo 300 | $59.90 | $8.99 | $0.00 | $26.25 | $6.30 | $18.36 | $94.29 | -$75.93 |
-| 100 | bajo 60 | $599.00 | $89.85 | $0.00 | $52.50 | $63.01 | $393.64 | $94.29 | $299.35 |
-| 100 | medio 150 | $599.00 | $89.85 | $0.00 | $131.26 | $63.01 | $314.88 | $94.29 | $220.59 |
-| 100 | completo 300 | $599.00 | $89.85 | $0.00 | $262.52 | $63.01 | $183.62 | $94.29 | $89.33 |
-| 1000 | bajo 60 | $5,990.00 | $898.50 | $59.90 | $525.05 | $630.05 | $3,876.50 | $94.29 | $3,782.21 |
-| 1000 | medio 150 | $5,990.00 | $898.50 | $59.90 | $1,312.61 | $630.05 | $3,088.93 | $94.29 | $2,994.64 |
-| 1000 | completo 300 | $5,990.00 | $898.50 | $59.90 | $2,625.23 | $630.05 | $1,776.32 | $94.29 | $1,682.03 |
+| 10 | bajo 60 | $59.90 | $8.99 | $0.00 | $6.03 | $7.24 | $37.65 | $94.29 | -$56.64 |
+| 10 | medio 150 | $59.90 | $8.99 | $0.00 | $15.08 | $7.24 | $28.60 | $94.29 | -$65.69 |
+| 10 | completo 300 | $59.90 | $8.99 | $0.00 | $30.15 | $7.24 | $13.53 | $94.29 | -$80.77 |
+| 100 | bajo 60 | $599.00 | $89.85 | $0.00 | $60.30 | $72.37 | $376.48 | $94.29 | $282.19 |
+| 100 | medio 150 | $599.00 | $89.85 | $0.00 | $150.76 | $72.37 | $286.02 | $94.29 | $191.73 |
+| 100 | completo 300 | $599.00 | $89.85 | $0.00 | $301.52 | $72.37 | $135.26 | $94.29 | $40.97 |
+| 1000 | bajo 60 | $5,990.00 | $898.50 | $59.90 | $603.05 | $723.65 | $3,704.90 | $94.29 | $3,610.61 |
+| 1000 | medio 150 | $5,990.00 | $898.50 | $59.90 | $1,507.61 | $723.65 | $2,800.33 | $94.29 | $2,706.04 |
+| 1000 | completo 300 | $5,990.00 | $898.50 | $59.90 | $3,015.23 | $723.65 | $1,292.72 | $94.29 | $1,198.43 |
 
 ## 3. Escenarios mensuales — traducción con `claude-opus-5-5` (sin caché, conservador)
 
@@ -52,26 +52,26 @@ Supuestos: 80 % de los minutos con traducción; nuevas pruebas cada mes = 30 % d
 
 | Clientes de pago | Uso | Ingresos brutos | Comisión tienda (15 %) | RevenueCat | Costo variable (uso) | Costo de pruebas | Margen de contribución | Costos fijos | Resultado neto (antes de impuestos) |
 |---|---|---|---|---|---|---|---|---|---|
-| 10 | bajo 60 | $59.90 | $8.99 | $0.00 | $30.93 | $37.12 | -$17.13 | $94.29 | -$111.42 |
-| 10 | medio 150 | $59.90 | $8.99 | $0.00 | $77.32 | $37.12 | -$63.52 | $94.29 | -$157.81 |
-| 10 | completo 300 | $59.90 | $8.99 | $0.00 | $154.65 | $37.12 | -$140.85 | $94.29 | -$235.14 |
-| 100 | bajo 60 | $599.00 | $89.85 | $0.00 | $309.29 | $371.15 | -$171.29 | $94.29 | -$265.59 |
-| 100 | medio 150 | $599.00 | $89.85 | $0.00 | $773.23 | $371.15 | -$635.23 | $94.29 | -$729.52 |
-| 100 | completo 300 | $599.00 | $89.85 | $0.00 | $1,546.46 | $371.15 | -$1,408.46 | $94.29 | -$1,502.76 |
-| 1000 | bajo 60 | $5,990.00 | $898.50 | $59.90 | $3,092.92 | $3,711.51 | -$1,772.83 | $94.29 | -$1,867.13 |
-| 1000 | medio 150 | $5,990.00 | $898.50 | $59.90 | $7,732.31 | $3,711.51 | -$6,412.22 | $94.29 | -$6,506.51 |
-| 1000 | completo 300 | $5,990.00 | $898.50 | $59.90 | $15,464.62 | $3,711.51 | -$14,144.53 | $94.29 | -$14,238.83 |
+| 10 | bajo 60 | $59.90 | $8.99 | $0.00 | $31.71 | $38.05 | -$18.85 | $94.29 | -$113.14 |
+| 10 | medio 150 | $59.90 | $8.99 | $0.00 | $79.27 | $38.05 | -$66.41 | $94.29 | -$160.70 |
+| 10 | completo 300 | $59.90 | $8.99 | $0.00 | $158.55 | $38.05 | -$145.68 | $94.29 | -$239.97 |
+| 100 | bajo 60 | $599.00 | $89.85 | $0.00 | $317.09 | $380.51 | -$188.45 | $94.29 | -$282.75 |
+| 100 | medio 150 | $599.00 | $89.85 | $0.00 | $792.73 | $380.51 | -$664.09 | $94.29 | -$758.38 |
+| 100 | completo 300 | $599.00 | $89.85 | $0.00 | $1,585.46 | $380.51 | -$1,456.82 | $94.29 | -$1,551.12 |
+| 1000 | bajo 60 | $5,990.00 | $898.50 | $59.90 | $3,170.93 | $3,805.11 | -$1,944.43 | $94.29 | -$2,038.73 |
+| 1000 | medio 150 | $5,990.00 | $898.50 | $59.90 | $7,927.31 | $3,805.11 | -$6,700.82 | $94.29 | -$6,795.11 |
+| 1000 | completo 300 | $5,990.00 | $898.50 | $59.90 | $15,854.62 | $3,805.11 | -$14,628.14 | $94.29 | -$14,722.43 |
 
 ## 4. Costo de la prueba gratuita por cliente que paga
 
 | Conversión | Uso medio 30 min | Uso medio 60 min | Uso completo 120 min |
 |---|---|---|---|
-| 10 % (claude-haiku-5-5) | $2.69 | $5.38 | $10.77 |
-| 25 % (claude-haiku-5-5) | $1.08 | $2.15 | $4.31 |
-| 40 % (claude-haiku-5-5) | $0.67 | $1.35 | $2.69 |
-| 10 % (claude-opus-5-5) | $18.74 | $37.48 | $74.96 |
-| 25 % (claude-opus-5-5) | $7.50 | $14.99 | $29.98 |
-| 40 % (claude-opus-5-5) | $4.69 | $9.37 | $18.74 |
+| 10 % (claude-haiku-5-5) | $3.08 | $6.16 | $12.33 |
+| 25 % (claude-haiku-5-5) | $1.23 | $2.47 | $4.93 |
+| 40 % (claude-haiku-5-5) | $0.77 | $1.54 | $3.08 |
+| 10 % (claude-opus-5-5) | $19.13 | $38.26 | $76.52 |
+| 25 % (claude-opus-5-5) | $7.65 | $15.30 | $30.61 |
+| 40 % (claude-opus-5-5) | $4.78 | $9.57 | $19.13 |
 
 ## 5. Plan Iglesia (fase 2) — una sola transcripción/traducción por fuente
 
@@ -79,19 +79,19 @@ Los minutos NO se multiplican por asistentes. El costo por asistente es solo tr�
 
 | Modelo | Asistentes | Minutos | Costo IA+voz | Tráfico de texto | Costo total | Ingreso neto (tienda 15 %) | Margen |
 |---|---|---|---|---|---|---|---|
-| claude-haiku-5-5 | 10 | 300 | $2.69 | $0.00 | $2.69 | $25.49 | $22.80 |
-| claude-haiku-5-5 | 10 | 600 | $5.38 | $0.00 | $5.38 | $25.49 | $20.11 |
-| claude-haiku-5-5 | 30 | 300 | $2.69 | $0.00 | $2.69 | $25.49 | $22.80 |
-| claude-haiku-5-5 | 30 | 600 | $5.38 | $0.00 | $5.39 | $25.49 | $20.10 |
-| claude-opus-5-5 | 10 | 300 | $18.74 | $0.00 | $18.74 | $25.49 | $6.75 |
-| claude-opus-5-5 | 10 | 600 | $37.48 | $0.00 | $37.48 | $25.49 | -$11.99 |
-| claude-opus-5-5 | 30 | 300 | $18.74 | $0.00 | $18.74 | $25.49 | $6.75 |
-| claude-opus-5-5 | 30 | 600 | $37.48 | $0.00 | $37.49 | $25.49 | -$11.99 |
+| claude-haiku-5-5 | 10 | 300 | $3.08 | $0.00 | $3.08 | $25.49 | $22.41 |
+| claude-haiku-5-5 | 10 | 600 | $6.16 | $0.00 | $6.16 | $25.49 | $19.33 |
+| claude-haiku-5-5 | 30 | 300 | $3.08 | $0.00 | $3.08 | $25.49 | $22.41 |
+| claude-haiku-5-5 | 30 | 600 | $6.16 | $0.00 | $6.17 | $25.49 | $19.32 |
+| claude-opus-5-5 | 10 | 300 | $19.13 | $0.00 | $19.13 | $25.49 | $6.36 |
+| claude-opus-5-5 | 10 | 600 | $38.26 | $0.00 | $38.26 | $25.49 | -$12.77 |
+| claude-opus-5-5 | 30 | 300 | $19.13 | $0.00 | $19.13 | $25.49 | $6.36 |
+| claude-opus-5-5 | 30 | 600 | $38.26 | $0.00 | $38.27 | $25.49 | -$12.77 |
 
 ## 6. Sensibilidad: comisión estándar de Apple (30 %)
 
-- `claude-haiku-5-5`: ingreso neto $4.19, costo con uso completo $2.69 → margen $1.50
-- `claude-opus-5-5`: ingreso neto $4.19, costo con uso completo $18.74 → margen -$14.55
+- `claude-haiku-5-5`: ingreso neto $4.19, costo con uso completo $3.08 → margen $1.11
+- `claude-opus-5-5`: ingreso neto $4.19, costo con uso completo $19.13 → margen -$14.94
 
 ## 7. Supuestos usados
 
@@ -99,6 +99,7 @@ Los minutos NO se multiplican por asistentes. El costo por asistente es solo tr�
 stt_usd_min: 0.0077
 stt_promo_usd_min: 0.0048
 keyterm_usd_min: 0.0013
+keyterms_enabled: True
 segments_per_min: 7
 input_tokens_per_segment: 1350
 system_tokens: 1150

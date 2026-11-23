@@ -8,11 +8,11 @@ Todo lo de este documento son **estimaciones**. No prometen ganancias. Hay que c
 
 ## 1. Resumen en palabras sencillas
 
-- El costo principal por minuto es **convertir la voz en texto** (Deepgram: unos USD 0.0077 por minuto).
+- El costo principal por minuto es **convertir la voz en texto** (Deepgram: unos USD 0.0077 por minuto, más ~USD 0.0013 por los keyterms activados: ~USD 0.0090 en total).
 - La **traducción** puede costar casi nada o ser lo más caro. Depende del modelo de IA:
   - Claude **Haiku 5.5**: unos USD 0.001 por minuto → el plan de USD 5.99 **deja margen**.
   - Claude **Opus 5.5**: unos USD 0.024–0.055 por minuto → el plan de USD 5.99 **pierde dinero** con cualquier uso medio o alto.
-- Con Haiku 5.5, un usuario que gasta sus 300 minutos completos cuesta unos **USD 2.69** al mes. Tras la comisión de la tienda (15 %) entran USD 5.09. Quedan unos **USD 2.40** para pagar gastos fijos.
+- Con Haiku 5.5, un usuario que gasta sus 300 minutos completos cuesta unos **USD 3.08** al mes (incluidos los keyterms). Tras la comisión de la tienda (15 %) entran USD 5.09. Quedan unos **USD 2.01** para pagar gastos fijos.
 - Con 10 clientes no se cubren los gastos fijos (~USD 94/mes). Con 100 clientes el resultado ya es positivo en los tres niveles de uso.
 - El plan Iglesia (USD 29.99 / 600 min) es rentable con Haiku 5.5 (~USD 20 de margen), porque los minutos **no** se multiplican por asistentes.
 
@@ -21,7 +21,7 @@ Todo lo de este documento son **estimaciones**. No prometen ganancias. Hay que c
 | Concepto | Tarifa usada | Fuente | ¿Verificada en página oficial? |
 |---|---|---|---|
 | Deepgram Nova-3 monolingüe, streaming, pay-as-you-go | USD 0.0077/min (regular) | [deepgram.com/pricing](https://deepgram.com/pricing) vía resultados de búsqueda y terceros | **Parcial.** La web oficial muestra USD 0.0048/min promocional (hasta 31-dic-2026). La tarifa regular 0.0077 proviene de terceros. El entorno de trabajo bloqueó el acceso directo a deepgram.com. |
-| Deepgram keyterms (glosario en el reconocimiento) | +USD 0.0013/min | Terceros | **No.** Por eso está desactivado por defecto (`DEEPGRAM_KEYTERMS_ENABLED=false`). |
+| Deepgram keyterms (glosario en el reconocimiento) | +USD 0.0013/min | Terceros | **No.** **Activado** por decisión del dueño (`DEEPGRAM_KEYTERMS_ENABLED=true`). Confirmar el precio en la cuenta de Deepgram. |
 | Deepgram, crédito inicial | USD 200 | Terceros y página oficial | Parcial |
 | Claude Opus 5.5 | USD 4 entrada / 20 salida por millón de tokens; lectura de caché 0.20 | Documentación de Anthropic (tabla de modelos, actualizada 2026-11-03) | Sí (documentación oficial del SDK) |
 | Claude Sonnet 5.5 | USD 2 / 10; caché 0.10 | Ídem | Sí |
@@ -54,7 +54,7 @@ El caché del prompt puede bajar mucho el costo, pero solo funciona si el prefij
 
 | Opción | Costo traducción/min | Margen Personal con uso completo | Comentario |
 |---|---|---|---|
-| `claude-haiku-5-5` | ~USD 0.001 | **+USD 2.40** | **Recomendado para el MVP**, si las pruebas de fidelidad (docs/pruebas-dispositivos.md §3) son aceptables. |
+| `claude-haiku-5-5` | ~USD 0.001 | **+USD 2.01** (con keyterms) | **Recomendado para el MVP**, si las pruebas de fidelidad (docs/pruebas-dispositivos.md §3) son aceptables. |
 | `claude-sonnet-5-5` | ~USD 0.009–0.025 | −USD 4.62 (sin caché) | Solo viable con caché efectivo o un precio más alto. |
 | `claude-opus-5-5` | ~USD 0.024–0.055 | **−USD 13.65** | Máxima calidad, pero **inviable** a USD 5.99. |
 | Google NMT (no implementado) | ~USD 0.017 | ~−USD 0.50 | Más caro que Haiku y sin contexto ni reglas de fidelidad. |
@@ -67,13 +67,20 @@ Antes de lanzar, hay que confirmar la calidad con el procedimiento de fidelidad 
 
 ## 5. ¿Cubren costos los planes propuestos?
 
-- **Personal USD 5.99 / 300 min:** sí, **solo con un modelo de traducción económico** (Haiku 5.5). El margen de contribución es de ~USD 2.40 a 4.55 por usuario según el uso. Con la comisión de Apple del 30 % el margen baja a ~USD 1.50.
-- **Prueba 7 días / 120 min:** con Haiku cuesta ~USD 1.08 por prueba con uso completo. Con una conversión del 25 % equivale a ~USD 2–4 por cliente que paga. Es aceptable.
-- **Iglesia USD 29.99 / 600 min / 30 asistentes:** margen de ~USD 20 con Haiku. No habilitar hasta implementar y medir la fase 2.
+- **Personal USD 5.99 / 300 min:** sí, **solo con un modelo de traducción económico** (Haiku 5.5). El margen de contribución es de ~USD 2.01 a 4.47 por usuario según el uso (con keyterms). Con la comisión de Apple del 30 % el margen baja a ~USD 1.11.
+- **Prueba 7 días / 120 min:** con Haiku y keyterms cuesta ~USD 1.23 por prueba con uso completo. Con una conversión del 25 % equivale a ~USD 2.50–5 por cliente que paga. Es aceptable.
+- **Iglesia USD 29.99 / 600 min / 30 asistentes:** margen de ~USD 19 con Haiku y keyterms. No habilitar hasta implementar y medir la fase 2.
 
 **Si no se aprueba un modelo económico**, propongo alguna de estas alternativas antes de comercializar:
 1. Personal a USD 9.99 con 150 minutos y Sonnet 5.5 con caché medido.
 2. Mantener USD 5.99 y dejar la traducción en vivo como un plan superior.
+
+## 5.1 Keyterms de Deepgram (activados)
+
+- El backend envía a Deepgram como «keyterms» el glosario cristiano (y los términos del glosario personal del usuario) en el idioma hablado: por ejemplo «Espíritu Santo», «resurrection» o «discipulado».
+- Se envían como máximo 50 términos y 1,200 caracteres, por debajo del límite documentado (~500 tokens).
+- Deepgram anunció en noviembre de 2025 que los keyterms funcionan en Nova-3 monolingüe y multilingüe. Si alguna vez rechaza la conexión con keyterms (HTTP 400), el backend **reintenta sin ellos** y deja un aviso en el registro, para que la sesión no falle.
+- Costo estimado: ~USD 0.0013/min adicional, **sin verificar**. Hay que medir si mejoran el reconocimiento (`pruebas-dispositivos.md` §1). Si no compensan, basta con poner `DEEPGRAM_KEYTERMS_ENABLED=false` y `COST_STT_USD_PER_MIN=0.0077`.
 
 ## 6. Lo que NO incluyen los números
 

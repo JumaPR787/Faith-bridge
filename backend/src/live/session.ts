@@ -210,7 +210,7 @@ export class LiveSession {
       {
         language: this.p.source,
         sampleRate: AUDIO_SAMPLE_RATE,
-        keyterms: keytermsFor(this.p.source),
+        keyterms: keytermsFor(this.p.source, this.p.glossary),
       },
       {
         onResult: (r) => {

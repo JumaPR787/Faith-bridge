@@ -14,7 +14,8 @@ SUPUESTOS = {
     # ── Reconocimiento de voz (Deepgram Nova-3 monolingüe, streaming) ──
     "stt_usd_min": 0.0077,          # tarifa regular pay-as-you-go (conservadora)
     "stt_promo_usd_min": 0.0048,    # tarifa promocional mostrada en la web oficial (vence 2026-12-31)
-    "keyterm_usd_min": 0.0013,      # opcional, desactivado por defecto (cifra de terceros, sin verificar)
+    "keyterm_usd_min": 0.0013,      # cifra de terceros, sin verificar
+    "keyterms_enabled": True,       # activados (glosario cristiano en el reconocimiento)
     # ── Traducción: tokens por minuto de predicación (medido sobre el prompt real) ──
     "segments_per_min": 7,          # cortes por pausa/oración (~8-9 s cada uno)
     "input_tokens_per_segment": 1350,  # ~1,150 de sistema (reglas+glosario+libros) + ~200 de contexto y segmento
@@ -71,7 +72,8 @@ def egress_per_min() -> float:
 
 
 def var_cost_per_min(model: str, cached=False, translate_share=1.0, stt=None) -> float:
-    stt = S["stt_usd_min"] if stt is None else stt
+    if stt is None:
+        stt = S["stt_usd_min"] + (S["keyterm_usd_min"] if S["keyterms_enabled"] else 0.0)
     return stt + egress_per_min() + translate_share * translation_cost_per_min(model, cached)
 
 
@@ -97,7 +99,7 @@ def main() -> None:
     p("|---|---|")
     p(f"| Deepgram Nova-3 streaming (regular) | {S['stt_usd_min']:.4f} |")
     p(f"| Deepgram Nova-3 streaming (promoción hasta 2026-12-31) | {S['stt_promo_usd_min']:.4f} |")
-    p(f"| Keyterms de Deepgram (opcional, desactivado) | +{S['keyterm_usd_min']:.4f} |")
+    p(f"| Keyterms de Deepgram ({'activados' if S['keyterms_enabled'] else 'desactivados'}) | +{S['keyterm_usd_min']:.4f} |")
     p(f"| Tráfico de salida del audio | {egress_per_min():.4f} |")
     for m in S["models"]:
         p(f"| Traducción {m} (sin caché) | {translation_cost_per_min(m, False):.4f} |")
