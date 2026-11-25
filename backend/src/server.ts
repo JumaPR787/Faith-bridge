@@ -26,7 +26,7 @@ const stt =
     : new FakeSttProvider();
 const translator =
   cfg.TRANSLATION_PROVIDER === "anthropic"
-    ? new AnthropicTranslator(required(cfg.ANTHROPIC_API_KEY, "ANTHROPIC_API_KEY"), cfg.TRANSLATION_MODEL, cfg.TRANSLATION_TIMEOUT_MS)
+    ? new AnthropicTranslator(required(cfg.ANTHROPIC_API_KEY, "ANTHROPIC_API_KEY"), cfg.TRANSLATION_MODEL, cfg.TRANSLATION_TIMEOUT_MS, cfg.ANTHROPIC_BASE_URL)
     : new FakeTranslator();
 const revenuecat: RevenueCatClient = cfg.REVENUECAT_SECRET_API_KEY
   ? new HttpRevenueCatClient(cfg.REVENUECAT_SECRET_API_KEY)

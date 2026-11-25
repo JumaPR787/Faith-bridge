@@ -59,7 +59,7 @@ async function checkAnthropic(): Promise<Result> {
   const name = "Anthropic (traducción)";
   if (!env.ANTHROPIC_API_KEY) return { name, ok: false, detail: "falta ANTHROPIC_API_KEY" };
   const model = env.TRANSLATION_MODEL ?? "claude-haiku-5-5";
-  const t = new AnthropicTranslator(env.ANTHROPIC_API_KEY, model, 30_000);
+  const t = new AnthropicTranslator(env.ANTHROPIC_API_KEY, model, 30_000, env.ANTHROPIC_BASE_URL || undefined);
   const text = "Good morning, church. Today we will read John 3:16 and talk about God's grace.";
   try {
     const t0 = Date.now();
