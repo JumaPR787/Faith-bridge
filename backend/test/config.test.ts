@@ -12,6 +12,27 @@ describe("configuración", () => {
   });
 });
 
+describe("ANTHROPIC_BASE_URL (servidor compatible, p. ej. FreeLLMAPI)", () => {
+  const prod = {
+    APP_ENV: "production",
+    DATABASE_URL: "postgres://x",
+    SUPABASE_JWKS_URL: "https://x.supabase.co/auth/v1/.well-known/jwks.json",
+    DEEPGRAM_API_KEY: "k",
+    ANTHROPIC_API_KEY: "k",
+    REVENUECAT_SECRET_API_KEY: "k",
+    REVENUECAT_WEBHOOK_AUTH: "x".repeat(24),
+    LISTENER_TOKEN_SECRET: "x".repeat(32),
+  };
+  it("se acepta en desarrollo", () => {
+    const cfg = loadConfig({ DATABASE_URL: "postgres://x", SUPABASE_JWT_SECRET: "x".repeat(32), ANTHROPIC_BASE_URL: "http://localhost:3001" });
+    expect(cfg.ANTHROPIC_BASE_URL).toBe("http://localhost:3001");
+  });
+  it("se rechaza en producción", () => {
+    expect(() => loadConfig(prod)).not.toThrow();
+    expect(() => loadConfig({ ...prod, ANTHROPIC_BASE_URL: "http://localhost:3001" })).toThrow(/ANTHROPIC_BASE_URL/);
+  });
+});
+
 describe("regla de traducción de texto", () => {
   it("1 minuto por cada 1,000 caracteres, redondeado hacia arriba", async () => {
     const { QuotaService } = await import("../src/quota/quota.js");

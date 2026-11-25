@@ -31,6 +31,9 @@ const EnvSchema = z.object({
   DEEPGRAM_KEYTERMS_ENABLED: boolFromString.default(true),
   TRANSLATION_PROVIDER: z.enum(["anthropic", "fake"]).default("anthropic"),
   ANTHROPIC_API_KEY: z.string().optional(),
+  // Opcional: otro servidor con la API de Anthropic (p. ej. FreeLLMAPI, http://localhost:3001).
+  // Activa el modo compatible: sin parámetros exclusivos de Anthropic. Prohibido en producción.
+  ANTHROPIC_BASE_URL: z.string().url().optional(),
   // Modelo de traducción elegido por el dueño del producto (ver docs/costos.md §4).
   TRANSLATION_MODEL: z.string().default("claude-haiku-5-5"),
   TRANSLATION_TIMEOUT_MS: z.coerce.number().int().default(15000),
@@ -97,6 +100,8 @@ function assertProductionSafety(cfg: Config): void {
   if (cfg.SUPABASE_JWT_SECRET && cfg.APP_ENV === "production") missing.push("SUPABASE_JWT_SECRET must not be set in production (use JWKS)");
   if (!cfg.DEEPGRAM_API_KEY) missing.push("DEEPGRAM_API_KEY");
   if (!cfg.ANTHROPIC_API_KEY) missing.push("ANTHROPIC_API_KEY");
+  if (cfg.ANTHROPIC_BASE_URL && cfg.APP_ENV === "production")
+    missing.push("ANTHROPIC_BASE_URL must not be set in production (free-tier routers are not for production)");
   if (!cfg.REVENUECAT_SECRET_API_KEY) missing.push("REVENUECAT_SECRET_API_KEY");
   if (!cfg.REVENUECAT_WEBHOOK_AUTH || cfg.REVENUECAT_WEBHOOK_AUTH.length < 24) missing.push("REVENUECAT_WEBHOOK_AUTH (>=24 chars)");
   if (!cfg.LISTENER_TOKEN_SECRET) missing.push("LISTENER_TOKEN_SECRET (>=32 chars)");

@@ -12,36 +12,44 @@ const THINKING_DISABLE_OK = new Set(["claude-haiku-5-5"]);
  * - Prompt de sistema estable con cache_control para abaratar entradas repetidas.
  * - Esfuerzo bajo: la tarea es una traducción corta, no razonamiento largo.
  * - Se verifica stop_reason antes de leer contenido (rechazos → marcado como fallido).
+ * - Con `baseURL` (p. ej. FreeLLMAPI) entra en modo compatible: solo envía campos
+ *   estándar de /v1/messages, porque el servidor puede reenviar a modelos que no son Claude.
  */
 export class AnthropicTranslator implements Translator {
   readonly name = "anthropic";
   private readonly client: Anthropic;
+  private readonly compat: boolean;
 
   constructor(
     apiKey: string,
     private readonly model: string,
     private readonly timeoutMs: number,
+    baseURL?: string,
   ) {
-    this.client = new Anthropic({ apiKey, maxRetries: 1, timeout: timeoutMs });
+    this.compat = Boolean(baseURL);
+    this.client = new Anthropic({ apiKey, maxRetries: 1, timeout: timeoutMs, ...(baseURL ? { baseURL } : {}) });
   }
 
   async translate(req: TranslateRequest): Promise<TranslateResult> {
     const system = buildSystemPrompt(req.source, req.target, req.glossary);
     const user = buildUserMessage(req.text, req.context);
-    const base = {
-      model: this.model,
-      max_tokens: 2048,
-      system: [{ type: "text" as const, text: system, cache_control: { type: "ephemeral" as const } }],
-      messages: [{ role: "user" as const, content: user }],
-      output_config: { effort: "low" as const },
-      ...(THINKING_DISABLE_OK.has(this.model) ? { thinking: { type: "disabled" as const } } : {}),
-    };
+    const messages = [{ role: "user" as const, content: user }];
+    const base = this.compat
+      ? { model: this.model, max_tokens: 2048, system, messages }
+      : {
+          model: this.model,
+          max_tokens: 2048,
+          system: [{ type: "text" as const, text: system, cache_control: { type: "ephemeral" as const } }],
+          messages,
+          output_config: { effort: "low" as const },
+          ...(THINKING_DISABLE_OK.has(this.model) ? { thinking: { type: "disabled" as const } } : {}),
+        };
 
     let stopReason: string | null;
     let blocks: Array<{ type: string; text?: string }>;
     let usage: { input_tokens: number; output_tokens: number; cache_read_input_tokens?: number | null };
     try {
-      if (SERVER_FALLBACK_MODELS.has(this.model)) {
+      if (!this.compat && SERVER_FALLBACK_MODELS.has(this.model)) {
         const r = await this.client.beta.messages.create(
           { ...base, betas: ["server-side-fallback-2026-07-01"], fallbacks: "default" },
           { signal: req.signal, timeout: this.timeoutMs },
